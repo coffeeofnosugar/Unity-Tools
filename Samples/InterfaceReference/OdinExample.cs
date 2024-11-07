@@ -1,0 +1,9 @@
+﻿using Sirenix.OdinInspector;
+
+namespace Tools.InterfaceReference.Sample
+{
+    public class OdinExample : SerializedMonoBehaviour
+    {
+        public IDamageable damageable;
+    }
+}
