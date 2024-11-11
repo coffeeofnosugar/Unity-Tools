@@ -18,11 +18,14 @@ namespace Tools.PoolModule
     public class SimpleObjectPooler : ObjectPooler
     {
         /// 母体
-        [DisableInPlayMode] public GameObject GameObjectToPool;
+        [DisableInPlayMode]
+        public GameObject GameObjectToPool;
         /// 对象池大小
-        [DisableInPlayMode] public int PoolSize = 20;
+        [DisableInPlayMode]
+        public int PoolSize = 20;
         /// true：当物体全部被取出，而继续获取物体时，允许对象池扩容
-        [DisableInPlayMode] public bool PoolCanExpand = true;
+        [DisableInPlayMode]
+        public bool PoolCanExpand = true;
 
         /// <summary> 填充对象池 </summary>
         protected override void FillObjectPool()

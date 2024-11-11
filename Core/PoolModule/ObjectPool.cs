@@ -6,6 +6,7 @@ namespace Tools.PoolModule
 {
     public class ObjectPool : MonoBehaviour
     {
-        [ReadOnly] public List<GameObject> PooledGameObjects;
+        [ReadOnly]
+        public List<GameObject> PooledGameObjects;
     }
 }

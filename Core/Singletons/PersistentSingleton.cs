@@ -10,8 +10,8 @@ namespace Tools
     /// </summary>
     public abstract class PersistentSingleton<T> : MonoBehaviour where T : Component
     {
-        [ShowInInspector, ReadOnly, PropertyOrder(-1000)]
-        protected virtual bool AutomaticallyUnparentOnAwake => true;
+        [ShowInInspector, DisableInPlayMode]
+        private bool automaticallyUnparentOnAwake;
         
         protected static T _instance;
         public static bool HasInstance => _instance != null;
@@ -46,7 +46,7 @@ namespace Tools
         {
             if (!Application.isPlaying) return;
 
-            if (AutomaticallyUnparentOnAwake)
+            if (automaticallyUnparentOnAwake)
                 transform.SetParent(null);
                 
             if (_instance == null)

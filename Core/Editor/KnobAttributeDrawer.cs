@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿#if ODIN_INSPECTOR
+using System.Globalization;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
@@ -90,3 +91,4 @@ namespace Tools.Editor
         }
     }
 }
+#endif
