@@ -1,3 +1,4 @@
+#if ODIN_INSPECTOR
 using System;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
@@ -24,7 +25,7 @@ namespace Tools.OdinDrawer.Sample
     /// 1. 改变值后重启unity，OdinClass所有的值都会丢失。
     /// 2. 同时选中多个物体，无法同时改变所有的属性
     /// <para></para>
-    /// 使用`this.ValueEntry.SmartValue = new OdinClass() {}`确实能解决以上两个问题，但会产生大量的GC，并且会让你一直保持场景
+    /// 使用`this.ValueEntry.SmartValue = new OdinClass() {}`确实能解决以上两个问题，但会产生大量的GC，并且会要求你一直保存场景
     /// </summary>
     public class OdinClassDrawer : OdinValueDrawer<OdinClass>
     {
@@ -91,3 +92,4 @@ namespace Tools.OdinDrawer.Sample
         }
     }
 }
+#endif

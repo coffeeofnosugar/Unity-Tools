@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
 
 namespace Tools.InterfaceReference.Sample
 {
@@ -7,3 +8,4 @@ namespace Tools.InterfaceReference.Sample
         public IDamageable damageable;
     }
 }
+#endif

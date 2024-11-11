@@ -1,3 +1,4 @@
+#if ODIN_INSPECTOR
 using System;
 using System.Linq;
 using Sirenix.OdinInspector.Editor;
@@ -55,3 +56,4 @@ namespace Tools.OdinDrawer.Sample
         }
     }
 }
+#endif

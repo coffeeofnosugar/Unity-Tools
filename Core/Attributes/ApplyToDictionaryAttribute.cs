@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if ODIN_INSPECTOR
+using System;
 using System.Diagnostics;
 
 namespace Tools
@@ -15,3 +16,4 @@ namespace Tools
     [AttributeUsage(AttributeTargets.Class)]
     public class ApplyToDictionaryValuesAttribute : Attribute { }
 }
+#endif

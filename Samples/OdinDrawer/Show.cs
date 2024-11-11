@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if ODIN_INSPECTOR
+using UnityEngine;
 
 namespace Tools.OdinDrawer.Sample
 {
@@ -23,3 +24,4 @@ namespace Tools.OdinDrawer.Sample
         public int third = 3;
     }
 }
+#endif
