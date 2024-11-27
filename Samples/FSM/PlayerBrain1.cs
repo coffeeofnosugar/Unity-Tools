@@ -39,10 +39,11 @@ namespace Tools.FSM.Sample
         [SerializeField] private CharacterState _attackState;
         
         
-        private void Start()
+        private void Awake()
         {
             // 初始化状态机，需要选择默认状态，在使用ForceSetDefaultState等方法时会进入该状态
-            StateMachine.InitializeAfterDeserialize(_idleState);
+            // StateMachine.InitializeAfterDeserialize(_idleState);
+            StateMachine.InitializeAfterDeserialize();
         }
 
         private void Update()

@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4248700157362948385
 Transform:
   m_ObjectHideFlags: 0
@@ -48,7 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StateMachine:
-    _currentState: {fileID: 0}
+    _currentState: {fileID: 2991903292692704993}
+    _defaultState: {fileID: 0}
   _idleState: {fileID: 2991903292692704993}
   _moveState: {fileID: 3018219175450508137}
   _attackState: {fileID: 4120377667985544535}

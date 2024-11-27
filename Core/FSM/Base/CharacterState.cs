@@ -1,4 +1,4 @@
-﻿namespace Tools.FSM.Sample
+﻿namespace Tools.FSM
 {
     /// <summary> 代码规范：<see cref="CharacterState"/>类里只做状态类的行为逻辑处理，最好不要转换状态，而是通过<see cref="PlayerBrain"/>转换状态
     /// 除非是事件状态（如攻击）结束后使用<see cref="StateMachine{State, CharacterState}.WithDefault.TrySetDefaultState"/>返回默认状态。 </summary>

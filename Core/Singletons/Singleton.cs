@@ -3,7 +3,8 @@
 namespace Tools
 {
     /// <summary>
-    /// 最简洁的单例
+    /// 最简洁的单例，适合跟随场景的单例
+    /// <para></para>
     /// 缺点：如果不小心创建了第二个，则同时会存在两个单例
     /// </summary>
     /// <example> 因为在切场景时会被摧毁，所以适合于与场景绑定的单例 </example>
@@ -20,6 +21,7 @@ namespace Tools
             {
                 if (_instance ==null)
                 {
+                    // _instance = FindObjectOfType<T>();
                     _instance = FindFirstObjectByType<T>();
                     if (_instance == null)
                     {

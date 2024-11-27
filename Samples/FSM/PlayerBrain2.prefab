@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4092531956261941160}
   - component: {fileID: 2854191224301108500}
   - component: {fileID: 175060533351365507}
+  - component: {fileID: 8541368018264286187}
   m_Layer: 0
   m_Name: PlayerBrain2
   m_TagString: Untagged
@@ -46,12 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88b0661eedb41bbbac33a13d8b9ec50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stateMachine:
-    _currentState: {fileID: 0}
+  StateMachine:
+    _currentState: {fileID: 2854191224301108500}
     _currentKey: 0
-    DefaultKey: 0
+    _defaultKey: 0
   _idleState: {fileID: 2854191224301108500}
   _moveState: {fileID: 175060533351365507}
+  _attackState: {fileID: 8541368018264286187}
 --- !u!114 &2854191224301108500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,3 +78,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 709eca0c6b834ec2938a9d3b3843de09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8541368018264286187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759273217133689213}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b6aaae2b32e41e9949fae31f0255f4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _brain: {fileID: 4092531956261941160}

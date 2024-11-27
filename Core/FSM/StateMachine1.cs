@@ -32,9 +32,9 @@ namespace Tools.FSM
         /************************************************************************************************************************/
         
         /// <summary> 初始化——进入初始状态 </summary>
-        public virtual void InitializeAfterDeserialize(TState currentState)
+        public virtual void InitializeAfterDeserialize()
         {
-            _currentState = currentState;
+            if (_currentState == null) return;
             using (new StateChange<TState>(this, null, CurrentState))
                 CurrentState.OnEnterState();
         }

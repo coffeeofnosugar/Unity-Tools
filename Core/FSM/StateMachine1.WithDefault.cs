@@ -1,4 +1,8 @@
-﻿namespace Tools.FSM
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace Tools.FSM
 {
     public partial class StateMachine<TState>
     {
@@ -26,30 +30,31 @@
         ///
         /// </code></remarks>
         [System.Serializable]
+        // [InlineProperty(LabelWidth = 90)]
+        [FoldoutGroup("State Machine"), HideLabel]
         public class WithDefault : StateMachine<TState>
         {
             /************************************************************************************************************************/
-            
-            public TState DefaultState { get; private set; }
+            [ReadOnly, HideInEditorMode]
+            [SerializeField] private TState _defaultState;
 
             public System.Action ForceSetDefaultState;
             
             /************************************************************************************************************************/
             
-            public override void InitializeAfterDeserialize(TState defaultState)
+            public override void InitializeAfterDeserialize()
             {
-                DefaultState = defaultState;
-                ForceSetDefaultState = () => ForceSetState(defaultState);
-                
-                _currentState = defaultState;
+                if (_currentState == null) return;
+                _defaultState = _currentState;
+                ForceSetDefaultState = () => ForceSetState(_defaultState);
                 using (new StateChange<TState>(this, null, CurrentState))
                     CurrentState.OnEnterState();
             }
-            
+
             /************************************************************************************************************************/
 
-            public bool TrySetDefaultState() => TrySetState(DefaultState);
-            public bool TryResetDefaultState() => TryResetState(DefaultState);
+            public bool TrySetDefaultState() => TrySetState(_defaultState);
+            public bool TryResetDefaultState() => TryResetState(_defaultState);
             
             /************************************************************************************************************************/
         }

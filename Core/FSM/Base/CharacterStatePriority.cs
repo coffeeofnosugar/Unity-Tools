@@ -1,4 +1,4 @@
-﻿namespace Tools.FSM.Sample
+﻿namespace Tools.FSM
 {
     /// <summary> 状态优先级 </summary>
     /// <example>

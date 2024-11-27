@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#if UNITY_EDITOR && ODIN_INSPECTOR
 using Sirenix.OdinInspector.Editor;
 #endif
 
@@ -27,6 +28,7 @@ namespace Tools.FSM
         public IDictionary<TKey, TState> Dictionary { get; set; } = new Dictionary<TKey, TState>();
 
         [UnityEngine.SerializeField]
+        [ReadOnly, HideInEditorMode]
         private TKey _currentKey;
         public TKey CurrentKey => _currentKey;
         public TKey PreviousKey => KeyChange<TKey>.PreviousKey;
@@ -34,32 +36,22 @@ namespace Tools.FSM
         
         /************************************************************************************************************************/
 
-        public override void InitializeAfterDeserialize(TState currentState)
+        public override void InitializeAfterDeserialize()
         {
-            foreach (KeyValuePair<TKey,TState> pair in Dictionary)
+            if (CurrentState != null)
             {
-                if (currentState == pair.Value)
-                {
-                    _currentKey = pair.Key;
-                    _currentState = currentState;
-                    using (new KeyChange<TKey>(this, default, _currentKey))
-                    using (new StateChange<TState>(this, null, CurrentState))
-                        CurrentState.OnEnterState();
-                    return;
-                }
+                using (new KeyChange<TKey>(this, default, _currentKey))
+                using (new StateChange<TState>(this, null, CurrentState))
+                    CurrentState.OnEnterState();
             }
-            throw new System.ArgumentException($"{GetType().FullName} 并未注册 {currentState} 状态");
-        }
-
-        public virtual void InitializeAfterDeserialize(TKey currentKey)
-        {
-            if (!Dictionary.TryGetValue(currentKey, out var state)) throw new System.ArgumentException($"{GetType().FullName} 并未注册 {currentKey} 状态");
-            
-            _currentKey = currentKey;
-            _currentState = state;
-            using (new KeyChange<TKey>(this, default, _currentKey))
-            using (new StateChange<TState>(this, null, CurrentState))
-                CurrentState.OnEnterState();
+            else if (Dictionary.TryGetValue(_currentKey, out var state))
+            {
+                ForceSetState(state);
+            }
+            else
+            {
+                throw new System.ArgumentException($"{GetType().FullName} 并未注册 {_currentKey} 状态，初始化失败");
+            }
         }
         
         /************************************************************************************************************************/
