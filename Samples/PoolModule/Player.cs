@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Tools.PoolModule.Sample
 {
@@ -10,13 +9,13 @@ namespace Tools.PoolModule.Sample
 
         private void Update()
         {
-            if (Keyboard.current.aKey.wasPressedThisFrame)
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 // var bullet = SimpleObjectPooler.Instance.GetPooledGameObject();
                 // bullet.SetActive(true);
             }
 
-            if (Keyboard.current.sKey.wasPressedThisFrame)
+            if (Input.GetKeyDown(KeyCode.S))
             {
                 var bullet =SimplePooler.GetPooledGameObject();
                 bullet.SetActive(true);

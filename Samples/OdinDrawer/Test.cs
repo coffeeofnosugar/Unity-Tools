@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR && ODIN_INSPECTOR
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -29,3 +30,4 @@ namespace Tools.OdinDrawer.Sample
         }
     }
 }
+#endif

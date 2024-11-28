@@ -1,4 +1,4 @@
-﻿#if ODIN_INSPECTOR
+﻿#if UNITY_EDITOR && ODIN_INSPECTOR
 using UnityEngine;
 
 namespace Tools.OdinDrawer.Sample

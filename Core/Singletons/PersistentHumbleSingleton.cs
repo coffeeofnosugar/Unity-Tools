@@ -26,8 +26,8 @@ namespace Tools
             {
                 if (_instance == null)
                 {
-                    // _instance = FindObjectOfType<T> ();
-                    _instance = FindFirstObjectByType<T>();
+                    _instance = FindObjectOfType<T> ();
+                    // _instance = FindFirstObjectByType<T>();
                     if (_instance == null)
                     {
                         var obj = new GameObject()
@@ -53,8 +53,8 @@ namespace Tools
 
             _initializationTime = Time.time;
             DontDestroyOnLoad(gameObject);
-            // T[] check = FindObjectsOfType<T>();
-            T[] check = FindObjectsByType<T>(FindObjectsSortMode.None);
+            T[] check = FindObjectsOfType<T>();
+            // T[] check = FindObjectsByType<T>(FindObjectsSortMode.None);
             foreach (T searched in check)
             {
                 if (searched != this && searched.GetComponent<PersistentHumbleSingleton<T>>()._initializationTime < _initializationTime)

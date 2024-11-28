@@ -39,14 +39,16 @@ namespace Tools.SaveLoad
 
         private void Bind<T, TData>(TData data) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
         {
-            var entity = FindFirstObjectByType<T>();
+            var entity = FindObjectOfType<T>();
+            // var entity = FindFirstObjectByType<T>();
             if (entity != null && data != null)
                 entity.Bind(data);
         }
         
         private void Bind<T, TData>(List<TData> datas) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
         {
-            var entities = FindObjectsByType<T>(FindObjectsSortMode.None);
+            var entities = FindObjectsOfType<T>();
+            // var entities = FindObjectsByType<T>(FindObjectsSortMode.None);
 
             foreach (var entity in entities)
             {
@@ -62,7 +64,8 @@ namespace Tools.SaveLoad
         
         private TData GetData<T, TData>() where T : MonoBehaviour, IBind<TData> where TData : class, ISaveable
         {
-            var entity = FindFirstObjectByType<T>();
+            var entity = FindObjectOfType<T>();
+            // var entity = FindFirstObjectByType<T>();
             return entity != null ? entity.GetData() : null;
         }
 

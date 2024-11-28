@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Tools.Observable.Sample
 {
@@ -14,7 +13,7 @@ namespace Tools.Observable.Sample
 
         private void Update()
         {
-            if (Keyboard.current.aKey.wasPressedThisFrame)
+            if (Input.GetKeyDown(KeyCode.A))
             {
                 Health.Value--;
             }

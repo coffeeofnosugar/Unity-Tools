@@ -98,7 +98,8 @@ namespace Tools.PoolModule
             _pools ??= new List<ObjectPool>(_initialCapacity);
             if (_pools.Count == 0)
             {
-                var pools = FindObjectsByType<ObjectPool>(FindObjectsSortMode.None);
+                var pools = FindObjectsOfType<ObjectPool>();
+                // var pools = FindObjectsByType<ObjectPool>(FindObjectsSortMode.None);
                 if (pools.Length > 0)
                     _pools.AddRange(pools);
             }
