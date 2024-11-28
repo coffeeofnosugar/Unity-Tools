@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Tools.PoolModule.Sample
+namespace Tools.PoolModule1.Sample
 {
     public class Player : MonoBehaviour
     {

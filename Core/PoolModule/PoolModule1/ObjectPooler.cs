@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Tools.PoolModule
+namespace Tools.PoolModule1
 {
     /// <summary> 不要使用单例，在每个需要使用对象池的地方实例化一个 </summary>
     public abstract class ObjectPooler : MonoBehaviour

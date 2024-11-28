@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Tools.PoolModule
+namespace Tools.PoolModule1
 {
     /// <summary>
     /// 一个实例化SimpleObjectPooler对象只能创建一种物体，也就是说如果只使用单例访问该对象池，那么只能创建一个物体

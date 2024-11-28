@@ -2,7 +2,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Tools.PoolModule
+namespace Tools.PoolModule1
 {
     public class ObjectPool : MonoBehaviour
     {
