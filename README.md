@@ -7,3 +7,20 @@
 该插件只是让被序列化的对象在Inspector窗口上排版更好看，不会影响对工具的使用。
 
 将项目clone到本地之后，如果本地没有Odin插件，可以简单的直接将报错的属性和using注释掉或删掉。
+
+
+
+### Assembly依赖
+
+#### Core
+
+- `Unity.TextMeshPro`
+- `DOTween.Modules`
+
+#### Samples
+
+- `Unity-Tools`
+- `Unity.Addressables`
+- `Unity.ResourceManager`
+- `UniTask`
+- `UniTask.Addressables`

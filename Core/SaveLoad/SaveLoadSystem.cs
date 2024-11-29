@@ -29,12 +29,12 @@ namespace Tools.SaveLoad
         {
             if (scene.name == "Menu") return;
             
-            Bind<Tools.SaveLoad.Sample.Player, PlayerData>(gameData.PlayerData);
+            // Bind<Tools.SaveLoad.Sample.Player, PlayerData>(gameData.PlayerData);
         }
 
         private void GetGameData()
         {
-            gameData.PlayerData = GetData<Tools.SaveLoad.Sample.Player, PlayerData>();
+            // gameData.PlayerData = GetData<Tools.SaveLoad.Sample.Player, PlayerData>();
         }
 
         private void Bind<T, TData>(TData data) where T : MonoBehaviour, IBind<TData> where TData : ISaveable, new()
