@@ -6,9 +6,14 @@ namespace Tools.PoolModule2.Sample
     {
         public float health;
         
-        public void Reset()
+        public void OnGet()
         {
-            Debug.Log($"回收 {name}");
+            
+        }
+
+        public void OnReturn()
+        {
+            
         }
     }
 }

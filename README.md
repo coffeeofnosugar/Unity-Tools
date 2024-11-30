@@ -8,6 +8,12 @@
 
 将项目clone到本地之后，如果本地没有Odin插件，可以简单的直接将报错的属性和using注释掉或删掉。
 
+#### DOTween
+
+[DOTween官网](https://dotween.demigiant.com/download.php)
+
+
+
 
 
 ### Assembly依赖
@@ -15,7 +21,11 @@
 #### Core
 
 - `Unity.TextMeshPro`
-- `DOTween.Modules`
+- `DOTween.Modules`：需在DOTween管理面板中生成asmdef
+- `Unity.Addressables`
+- `Unity.ResourceManager`
+- `UniTask`
+- `UniTask.Addressables`
 
 #### Samples
 
