@@ -10,9 +10,11 @@ namespace Tools.PoolModule2.Sample
     {
         public ObjectPool<Item> itemPool;
         [ShowInInspector] public readonly ItemFactory itemFactory = new();
+        [ShowInInspector] public SingleFactory<Item> itemSingleFactory;
 
         private async void Awake()
         {
+            itemSingleFactory = new SingleFactory<Item>("Assets/Unity-Tools/Samples/PoolModule/PoolModule2/{0}.prefab");
             string pathFormat = "Assets/Unity-Tools/Samples/PoolModule/PoolModule2/{0}.prefab";
             GameObject itemObj = await Addressables.LoadAssetAsync<GameObject>(string.Format(pathFormat, "Item"));
             Item item = itemObj.GetComponent<Item>();
@@ -25,7 +27,9 @@ namespace Tools.PoolModule2.Sample
         public List<Item> lastItem;
         public List<ItemA> lastItemA;
         public List<ItemB> lastItemB;
-        private void Update()
+        public ItemA itemA;
+        public ItemB itemB;
+        private async void Update()
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -59,6 +63,22 @@ namespace Tools.PoolModule2.Sample
                 ItemB item = lastItemB[^1];
                 lastItemB.RemoveAt(lastItemB.Count - 1);
                 itemFactory.Return(item);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                itemA = await itemSingleFactory.Get<ItemA>();
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                itemSingleFactory.Return(itemA);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                itemB = await itemSingleFactory.Get<ItemB>();
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad5))
+            {
+                itemSingleFactory.Return(itemB);
             }
         }
     }

@@ -164,6 +164,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastItem: []
+  lastItemA: []
+  lastItemB: []
+  itemA: {fileID: 0}
+  itemB: {fileID: 0}
 --- !u!1 &969313732
 GameObject:
   m_ObjectHideFlags: 0

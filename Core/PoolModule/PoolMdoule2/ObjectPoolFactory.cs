@@ -44,7 +44,7 @@ namespace Tools.PoolModule2
         }
         
         public TO Get<TO>()
-            where TO : MonoBehaviour, IPoolable
+            where TO : T
         {
             string name = typeof(TO).Name;
             if (_pools.TryGetValue(name, out var pool))
@@ -57,7 +57,7 @@ namespace Tools.PoolModule2
         }
 
         public TO[] Get<TO>(int count)
-            where TO : MonoBehaviour, IPoolable
+            where TO : T
         {
             string name = typeof(TO).Name;
             if (_pools.TryGetValue(name, out var pool))

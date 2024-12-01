@@ -37,8 +37,8 @@ namespace Tools.PoolModule2
             }
 
             var pooledObject = _pool.Pop();
-            pooledObject.OnGet();
             pooledObject.gameObject.SetActive(true);
+            pooledObject.OnGet();
             return pooledObject;
         }
 
@@ -59,6 +59,7 @@ namespace Tools.PoolModule2
         {
             obj.OnReturn();
             obj.gameObject.SetActive(false);
+            obj.transform.SetParent(_parent);
             _pool.Push(obj);
         }
             
