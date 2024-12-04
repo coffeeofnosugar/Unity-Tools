@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
@@ -79,6 +80,14 @@ namespace Tools.PoolModule2
             else
             {
                 Debug.LogError($"未找到对象池: {name}");
+            }
+        }
+        
+        public void ReturnAll()
+        {
+            foreach (ObjectPool<T> pool in _pools.Values)
+            {
+                pool.ReturnAll();
             }
         }
         

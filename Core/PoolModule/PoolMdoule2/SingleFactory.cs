@@ -18,7 +18,7 @@ namespace Tools.PoolModule2
     {
         private readonly Transform _parent; // 父物体
         private readonly string prefabPath;
-        [ShowInInspector] private readonly Dictionary<string, T> pool = new();
+        private readonly Dictionary<string, T> pool = new();
         
         public SingleFactory(string prefabPath)
         {
@@ -45,7 +45,15 @@ namespace Tools.PoolModule2
             obj.OnReturn();
             obj.gameObject.SetActive(false);
             obj.transform.SetParent(_parent);
-            pool[obj.GetType().Name] = obj;
+            // pool[obj.GetType().Name] = obj;
+        }
+        
+        public void ReturnAll()
+        {
+            foreach (T obj in pool.Values)
+            {
+                Return(obj);
+            }
         }
 
         private async Task<TO> Create<TO>(string name)

@@ -8,7 +8,7 @@ namespace Tools.PoolModule2.Sample
 {
     public class Manager : MonoBehaviour
     {
-        public ObjectPool<Item> itemPool;
+        [ShowInInspector] public ObjectPool<Item> itemPool;
         [ShowInInspector] public readonly ItemFactory itemFactory = new();
         [ShowInInspector] public SingleFactory<Item> itemSingleFactory;
 
@@ -42,6 +42,10 @@ namespace Tools.PoolModule2.Sample
                 lastItem.RemoveAt(lastItem.Count - 1);
                 itemPool.Return(item);
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                itemPool.ReturnAll();
+            }
             else if (Input.GetKeyDown(KeyCode.A))
             {
                 lastItemA.Add(itemFactory.Get<ItemA>());
@@ -64,6 +68,10 @@ namespace Tools.PoolModule2.Sample
                 lastItemB.RemoveAt(lastItemB.Count - 1);
                 itemFactory.Return(item);
             }
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                itemFactory.ReturnAll();
+            }
             else if (Input.GetKeyDown(KeyCode.Keypad1))
             {
                 itemA = await itemSingleFactory.Get<ItemA>();
@@ -79,6 +87,10 @@ namespace Tools.PoolModule2.Sample
             else if (Input.GetKeyDown(KeyCode.Keypad5))
             {
                 itemSingleFactory.Return(itemB);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad6))
+            {
+                itemSingleFactory.ReturnAll();
             }
         }
     }

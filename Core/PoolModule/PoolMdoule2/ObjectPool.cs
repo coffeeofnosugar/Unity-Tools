@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -9,12 +10,13 @@ namespace Tools.PoolModule2
         where T : MonoBehaviour, IPoolable
     {
         private readonly Stack<T> _pool;
+        private readonly List<T> _activeObject;
         private readonly T _prefab; // 预制体
         private readonly Transform _parent; // 父物体
         private readonly int maxCapacity; // 最大容量
-        public int Count { get; private set; } // 当前数量
-        public int PoolCount => _pool.Count; // 活跃数量
-        public int ActiveCount => Count - _pool.Count; // 活跃数量
+        public int Count { get; private set; } // 总数量
+        public int PoolCount => _pool.Count; // 对象池中数量
+        public int ActiveCount => _activeObject.Count; // 活跃数量
 
         /// 温馨提示：如果预制体是通过Addressable加载的，可以直接释放预制体
         public ObjectPool(T prefab, int initialCapacity = 0, int maxCapacity = 50)
@@ -23,6 +25,7 @@ namespace Tools.PoolModule2
             _parent = new GameObject($"[ObjectPool] {prefab.name}").transform;
             this.maxCapacity = maxCapacity;
             _pool = new Stack<T>(maxCapacity);
+            _activeObject = new List<T>(maxCapacity);
                 
             for (int i = 0; i < initialCapacity; i++)
                 CreateNewObject();
@@ -37,6 +40,7 @@ namespace Tools.PoolModule2
             }
 
             var pooledObject = _pool.Pop();
+            _activeObject.Add(pooledObject);
             pooledObject.gameObject.SetActive(true);
             pooledObject.OnGet();
             return pooledObject;
@@ -61,6 +65,16 @@ namespace Tools.PoolModule2
             obj.gameObject.SetActive(false);
             obj.transform.SetParent(_parent);
             _pool.Push(obj);
+            _activeObject.Remove(obj);
+        }
+
+        public void ReturnAll()
+        {
+            for (int i = _activeObject.Count - 1; i >= 0; i--)
+            {
+                Return(_activeObject[i]);
+            }
+            _activeObject.Clear();
         }
             
         private T CreateNewObject()
@@ -82,8 +96,15 @@ namespace Tools.PoolModule2
                 var obj = _pool.Pop();
                 Object.Destroy(obj.gameObject);
             }
-            Object.Destroy(_parent.gameObject);
+
+            for (int i = _activeObject.Count - 1; i >= 0; i--)
+            {
+                Object.Destroy(_activeObject[i].gameObject);
+            }
+            
             _pool.Clear();
+            _activeObject.Clear();
+            Object.Destroy(_parent.gameObject);
         }
     }
 }
