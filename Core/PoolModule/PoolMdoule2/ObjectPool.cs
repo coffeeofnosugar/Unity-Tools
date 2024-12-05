@@ -56,9 +56,6 @@ namespace Tools.PoolModule2
             return result;
         }
         
-        /// 一般在Dispose时调用
-        internal T GetWithoutAction() => _pool.Pop();
-        
         public void Return(T obj)
         {
             obj.OnReturn();
@@ -89,6 +86,7 @@ namespace Tools.PoolModule2
             return obj;
         }
 
+        [Button]
         public void Dispose()
         {
             while (_pool.Count > 0)

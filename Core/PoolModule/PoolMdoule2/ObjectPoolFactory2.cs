@@ -8,15 +8,35 @@ using Object = UnityEngine.Object;
 
 namespace Tools.PoolModule2
 {
-    public abstract class ObjectPoolFactory<T> : IDisposable
-        where T : MonoBehaviour, IPoolable
+    /// <summary>
+    /// 本工厂与普通的对象池工厂不同，
+    /// 该对象池工厂只有在需要时才会创建对象池。
+    /// 字典的键为预制体名称的不同点，如预制体名称为 ItemA ItemB ItemC 等，那么键就是A B C，也可以是ItemA ItemB ItemC，取决于Path的{0}占位符。
+    /// 但需要注意的是，需要使用唯一表示区分不同的预制体
+    /// <para></para>
+    /// 适合一个类型有多个实例的情况
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ObjectPoolFactory2<T> : IDisposable
+        where T : MonoBehaviour, IPoolable2
     {
         private readonly Dictionary<string, ObjectPool<T>> _pools = new();
-        
-        public abstract UniTask InitAsync();
-        
-        protected async UniTask CreatePool(string fullPath, int initialCapacity = 0, int maxCapacity = 50)
+
+        /// 该路径为预制体的路径，使用{0}占位符
+        protected virtual string Path { get; } = "Assets/Unity-Tools/Samples/PoolModule/PoolModule2/Item{0}.prefab";
+        protected virtual int InitialCapacity { get; }
+        protected virtual int MaxCapacity { get; }
+
+        public ObjectPoolFactory2(string path, int initialCapacity = 0, int maxCapacity = 50)
         {
+            Path = path;
+            InitialCapacity = initialCapacity;
+            MaxCapacity = maxCapacity;
+        }
+
+        protected async UniTask CreatePool(string name, int initialCapacity = 0, int maxCapacity = 50)
+        {
+            string fullPath = string.Format(Path, name);
             GameObject obj = await Addressables.LoadAssetAsync<GameObject>(fullPath);
             if (obj == null)
             {
@@ -32,7 +52,6 @@ namespace Tools.PoolModule2
                 return;
             }
             
-            string name = item.GetType().Name;
             if (_pools.ContainsKey(name))
             {
                 Debug.LogWarning($"对象池已存在: {name}");
@@ -43,36 +62,28 @@ namespace Tools.PoolModule2
             _pools.Add(name, pool);
             Addressables.Release(obj);  // 可以直接释放预制体
         }
-        
-        public TO Get<TO>()
-            where TO : T
+
+        public async UniTask<T> Get(string name)
         {
-            string name = typeof(TO).Name;
-            if (_pools.TryGetValue(name, out var pool))
+            if (!_pools.ContainsKey(name))
             {
-                return pool.Get() as TO;
+                await CreatePool(name, InitialCapacity, MaxCapacity);
             }
-            
-            Debug.LogError($"未找到对象池: {name}");
-            return null;
+            return _pools[name].Get();
         }
 
-        public TO[] Get<TO>(int count)
-            where TO : T
+        public async UniTask<T[]> Get(string name, int count)
         {
-            string name = typeof(TO).Name;
-            if (_pools.TryGetValue(name, out var pool))
+            if (!_pools.ContainsKey(name))
             {
-                return pool.Get(count) as TO[];
+                await CreatePool(name, InitialCapacity, MaxCapacity);
             }
-            
-            Debug.LogError($"未找到对象池: {name}");
-            return null;
+            return _pools[name].Get(count);
         }
         
         public void Return(T obj)
         {
-            string name = obj.GetType().Name;
+            string name = obj.Name;
             if (_pools.TryGetValue(name, out var pool))
             {
                 pool.Return(obj);
@@ -93,22 +104,9 @@ namespace Tools.PoolModule2
         
         public void Dispose()
         {
-            foreach (KeyValuePair<string, ObjectPool<T>> pair in _pools)
+            foreach (ObjectPool<T> pool in _pools.Values)
             {
-                var pool = pair.Value;
-                var objects = new List<T>();
-
-                // 将所有对象回收到池中
-                while (pool.PoolCount > 0)
-                {
-                    objects.Add(pool.GetWithoutAction());
-                }
-
-                // 销毁池中的对象
-                foreach (var obj in objects)
-                {
-                    Object.Destroy(obj.gameObject);
-                }
+                pool.Dispose();
             }
 
             _pools.Clear();

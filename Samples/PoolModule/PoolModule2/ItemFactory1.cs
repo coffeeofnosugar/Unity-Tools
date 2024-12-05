@@ -2,7 +2,7 @@
 
 namespace Tools.PoolModule2.Sample
 {
-    public class ItemFactory : ObjectPoolFactory<Item>
+    public class ItemFactory1 : ObjectPoolFactory1<Item>
     {
         public override async UniTask InitAsync()
         {

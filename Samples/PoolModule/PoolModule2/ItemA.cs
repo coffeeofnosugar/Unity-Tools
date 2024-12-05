@@ -2,7 +2,7 @@
 {
     public class ItemA : Item
     {
-        public float healt;
+        public float age;
         public float damage;
     }
 }
