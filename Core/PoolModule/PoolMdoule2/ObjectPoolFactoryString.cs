@@ -17,8 +17,8 @@ namespace Tools.PoolModule2
     /// 适合一个类型有多个实例的情况
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObjectPoolFactory2<T> : IDisposable
-        where T : MonoBehaviour, IPoolable2
+    public class ObjectPoolFactoryString<T> : IDisposable
+        where T : MonoBehaviour, IPoolableString
     {
         private readonly Dictionary<string, ObjectPool<T>> _pools = new();
 
@@ -27,7 +27,7 @@ namespace Tools.PoolModule2
         protected virtual int InitialCapacity { get; }
         protected virtual int MaxCapacity { get; }
 
-        public ObjectPoolFactory2(string path, int initialCapacity = 0, int maxCapacity = 50)
+        public ObjectPoolFactoryString(string path, int initialCapacity = 0, int maxCapacity = 50)
         {
             Path = path;
             InitialCapacity = initialCapacity;

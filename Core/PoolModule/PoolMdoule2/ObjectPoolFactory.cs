@@ -13,7 +13,7 @@ namespace Tools.PoolModule2
     /// 适合父类有多个子类的情况，且每个子类只有一种实例
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class ObjectPoolFactory1<T> : IDisposable
+    public abstract class ObjectPoolFactory<T> : IDisposable
         where T : MonoBehaviour, IPoolable
     {
         private readonly Dictionary<string, ObjectPool<T>> _pools = new();

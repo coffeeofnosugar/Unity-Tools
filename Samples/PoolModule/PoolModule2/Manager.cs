@@ -10,9 +10,9 @@ namespace Tools.PoolModule2.Sample
     public class Manager : MonoBehaviour
     {
         [ShowInInspector] public ObjectPool<Item> itemPool;
-        [ShowInInspector] public readonly ItemFactory1 itemFactory1 = new();
+        [ShowInInspector] public readonly ItemFactory itemFactory = new();
         [ShowInInspector] public SingleFactory<Item> itemSingleFactory;
-        [ShowInInspector] public readonly ObjectPoolFactory2<Item> itemFactory2 = new("Assets/Unity-Tools/Samples/PoolModule/PoolModule2/ItemFactory2/Item_{0}.prefab", 1, 10);
+        [ShowInInspector] public readonly ObjectPoolFactoryString<Item> itemFactoryString = new("Assets/Unity-Tools/Samples/PoolModule/PoolModule2/ItemFactory2/Item_{0}.prefab", 1, 10);
 
         private async void Awake()
         {
@@ -23,7 +23,7 @@ namespace Tools.PoolModule2.Sample
             itemPool = new ObjectPool<Item>(item, 3, 10);
             Addressables.Release(itemObj);  // 可直接释放资源
 
-            await itemFactory1.InitAsync();
+            await itemFactory.InitAsync();
         }
 
         public List<Item> lastItem;
@@ -53,29 +53,29 @@ namespace Tools.PoolModule2.Sample
             }
             else if (Input.GetKeyDown(KeyCode.A))
             {
-                lastItemA.Add(itemFactory1.Get<ItemA>());
+                lastItemA.Add(itemFactory.Get<ItemA>());
             }
             else if (Input.GetKeyDown(KeyCode.S))
             {
                 if (lastItemA.Count == 0) return;
                 ItemA item = lastItemA[^1];
                 lastItemA.RemoveAt(lastItemA.Count - 1);
-                itemFactory1.Return(item);
+                itemFactory.Return(item);
             }
             else if (Input.GetKeyDown(KeyCode.B))
             {
-                lastItemB.Add(itemFactory1.Get<ItemB>());
+                lastItemB.Add(itemFactory.Get<ItemB>());
             }
             else if (Input.GetKeyDown(KeyCode.N))
             {
                 if (lastItemB.Count == 0) return;
                 ItemB item = lastItemB[^1];
                 lastItemB.RemoveAt(lastItemB.Count - 1);
-                itemFactory1.Return(item);
+                itemFactory.Return(item);
             }
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                itemFactory1.ReturnAll();
+                itemFactory.ReturnAll();
             }
             else if (Input.GetKeyDown(KeyCode.Keypad1))
             {
@@ -99,31 +99,31 @@ namespace Tools.PoolModule2.Sample
             }
             else if (Input.GetKeyDown(KeyCode.Q))
             {
-                Item temp = await itemFactory2.Get("A");
+                Item temp = await itemFactoryString.Get("A");
                 lastItem2A.Add(temp);
             }
             else if (Input.GetKeyDown(KeyCode.W))
             {
-                itemFactory2.Return(lastItem2A[^1]);
+                itemFactoryString.Return(lastItem2A[^1]);
                 lastItem2A.RemoveAt(lastItem2A.Count - 1);
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
-                itemFactory2.ReturnAll();
+                itemFactoryString.ReturnAll();
             }
             else if (Input.GetKeyDown(KeyCode.R))
             {
-                Item temp = await itemFactory2.Get("B");
+                Item temp = await itemFactoryString.Get("B");
                 lastItem2B.Add(temp);
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
-                itemFactory2.Return(lastItem2B[^1]);
+                itemFactoryString.Return(lastItem2B[^1]);
                 lastItem2B.RemoveAt(lastItem2B.Count - 1);
             }
             else if (Input.GetKeyDown(KeyCode.Y))
             {
-                itemFactory2.ReturnAll();
+                itemFactoryString.ReturnAll();
             }
         }
     }

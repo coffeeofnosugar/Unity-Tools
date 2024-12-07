@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Tools.PoolModule2.Sample
 {
-    public class Item : MonoBehaviour, IPoolable, IPoolable2
+    public class Item : MonoBehaviour, IPoolable, IPoolableString
     {
         public float health;
         public string name;

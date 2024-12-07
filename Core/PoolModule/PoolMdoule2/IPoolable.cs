@@ -6,8 +6,13 @@
         void OnReturn();
     }
     
-    public interface IPoolable2 : IPoolable
+    public interface IPoolableString : IPoolable
     {
         string Name { get; }
+    }
+    
+    public interface IPoolableInt : IPoolable
+    {
+        int Id { get; }
     }
 }
