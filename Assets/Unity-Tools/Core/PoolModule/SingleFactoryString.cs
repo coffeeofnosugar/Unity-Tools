@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Object = UnityEngine.Object;
 
-namespace Tools.PoolModule2
+namespace Tools.PoolModule
 {
     /// <summary>
     /// 本工厂与普通的对象池工厂不同，它只会创建一个对象，而不是创建多个对象

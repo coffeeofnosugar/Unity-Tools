@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Tools.PoolModule2.Sample
+namespace Tools.PoolModule.Sample
 {
     public class Manager : MonoBehaviour
     {

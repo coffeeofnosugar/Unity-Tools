@@ -1,4 +1,4 @@
-﻿namespace Tools.PoolModule2.Sample
+﻿namespace Tools.PoolModule.Sample
 {
     public class ItemA : Item
     {

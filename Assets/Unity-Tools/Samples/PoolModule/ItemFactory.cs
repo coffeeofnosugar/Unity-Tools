@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 
-namespace Tools.PoolModule2.Sample
+namespace Tools.PoolModule.Sample
 {
     public class ItemFactory : ObjectPoolFactory<Item>
     {

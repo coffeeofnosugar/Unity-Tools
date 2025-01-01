@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Tools.PoolModule2
+namespace Tools.PoolModule
 {
     public class ObjectPool<T> : IDisposable
         where T : MonoBehaviour, IPoolable

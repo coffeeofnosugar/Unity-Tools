@@ -1,4 +1,4 @@
-﻿namespace Tools.PoolModule2
+﻿namespace Tools.PoolModule
 {
     public interface IPoolable
     {

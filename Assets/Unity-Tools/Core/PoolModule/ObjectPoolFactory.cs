@@ -1,40 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Tools.PoolModule2
+namespace Tools.PoolModule
 {
     /// <summary>
-    /// 本工厂与普通的对象池工厂不同，
-    /// 该对象池工厂只有在需要时才会创建对象池。
-    /// 字典的键为预制体名称的不同点，如预制体名称为 ItemA ItemB ItemC 等，那么键就是A B C，也可以是ItemA ItemB ItemC，取决于Path的{0}占位符。
-    /// 但需要注意的是，需要使用唯一表示区分不同的预制体
+    /// 字典的键为类型名称
     /// <para></para>
-    /// 适合一个类型有多个实例的情况
+    /// 适合父类有多个子类的情况，且每个子类只有一种实例
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObjectPoolFactoryString<T> : IDisposable
-        where T : MonoBehaviour, IPoolableString
+    public abstract class ObjectPoolFactory<T> : IDisposable
+        where T : MonoBehaviour, IPoolable
     {
         private readonly Dictionary<string, ObjectPool<T>> _pools = new();
-
-        /// 该路径为预制体的路径，使用{0}占位符
-        protected virtual string Path { get; } = "Assets/Unity-Tools/Samples/PoolModule/PoolModule2/Item{0}.prefab";
-        protected virtual int InitialCapacity { get; }
-        protected virtual int MaxCapacity { get; }
-
-        public ObjectPoolFactoryString(string path, int initialCapacity = 0, int maxCapacity = 50)
+        
+        public abstract UniTask InitAsync();
+        
+        protected async UniTask CreatePool(string fullPath, int initialCapacity = 0, int maxCapacity = 50)
         {
-            Path = path;
-            InitialCapacity = initialCapacity;
-            MaxCapacity = maxCapacity;
-        }
-
-        protected async UniTask CreatePool(string name, int initialCapacity = 0, int maxCapacity = 50)
-        {
-            string fullPath = string.Format(Path, name);
             GameObject obj = await Addressables.LoadAssetAsync<GameObject>(fullPath);
             if (obj == null)
             {
@@ -50,6 +37,7 @@ namespace Tools.PoolModule2
                 return;
             }
             
+            string name = item.GetType().Name;
             if (_pools.ContainsKey(name))
             {
                 Debug.LogWarning($"对象池已存在: {name}");
@@ -61,27 +49,45 @@ namespace Tools.PoolModule2
             Addressables.Release(obj);  // 可以直接释放预制体
         }
 
-        public async UniTask<T> Get(string name)
+        public T Get(string name)
         {
-            if (!_pools.ContainsKey(name))
+            if (_pools.TryGetValue(name, out var pool))
             {
-                await CreatePool(name, InitialCapacity, MaxCapacity);
+                return pool.Get();
             }
-            return _pools[name].Get();
+            
+            Debug.LogError($"未找到对象池: {name}");
+            return null;
         }
 
-        public async UniTask<T[]> Get(string name, int count)
+        public T[] Get(string name, int count)
         {
-            if (!_pools.ContainsKey(name))
+            if (_pools.TryGetValue(name, out var pool))
             {
-                await CreatePool(name, InitialCapacity, MaxCapacity);
+                return pool.Get(count);
             }
-            return _pools[name].Get(count);
+            
+            Debug.LogError($"未找到对象池: {name}");
+            return null;
+        }
+        
+        public TO Get<TO>()
+            where TO : T
+        {
+            string name = typeof(TO).Name;
+            return Get(name) as TO;
+        }
+
+        public TO[] Get<TO>(int count)
+            where TO : T
+        {
+            string name = typeof(TO).Name;
+            return Get(name, count) as TO[];
         }
         
         public void Return(T obj)
         {
-            string name = obj.Name;
+            string name = obj.GetType().Name;
             if (_pools.TryGetValue(name, out var pool))
             {
                 pool.Return(obj);
@@ -100,6 +106,7 @@ namespace Tools.PoolModule2
             }
         }
         
+        [Button]
         public void Dispose()
         {
             foreach (ObjectPool<T> pool in _pools.Values)

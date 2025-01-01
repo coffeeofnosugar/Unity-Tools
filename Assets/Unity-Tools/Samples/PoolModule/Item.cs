@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Tools.PoolModule2.Sample
+namespace Tools.PoolModule.Sample
 {
     public class Item : MonoBehaviour, IPoolable, IPoolableString
     {

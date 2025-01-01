@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-namespace Tools.PoolModule2
+namespace Tools.PoolModule
 {
     /// <summary>
     /// 本工厂与普通的对象池工厂不同，
@@ -15,26 +15,26 @@ namespace Tools.PoolModule2
     /// 适合一个类型有多个实例的情况
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ObjectPoolFactoryInt<T> : IDisposable
-        where T : MonoBehaviour, IPoolableInt
+    public class ObjectPoolFactoryString<T> : IDisposable
+        where T : MonoBehaviour, IPoolableString
     {
-        private readonly Dictionary<int, ObjectPool<T>> _pools = new();
+        private readonly Dictionary<string, ObjectPool<T>> _pools = new();
 
         /// 该路径为预制体的路径，使用{0}占位符
         protected virtual string Path { get; } = "Assets/Unity-Tools/Samples/PoolModule/PoolModule2/Item{0}.prefab";
         protected virtual int InitialCapacity { get; }
         protected virtual int MaxCapacity { get; }
 
-        public ObjectPoolFactoryInt(string path, int initialCapacity = 0, int maxCapacity = 50)
+        public ObjectPoolFactoryString(string path, int initialCapacity = 0, int maxCapacity = 50)
         {
             Path = path;
             InitialCapacity = initialCapacity;
             MaxCapacity = maxCapacity;
         }
 
-        protected async UniTask CreatePool(int id, int initialCapacity = 0, int maxCapacity = 50)
+        protected async UniTask CreatePool(string name, int initialCapacity = 0, int maxCapacity = 50)
         {
-            string fullPath = string.Format(Path, id);
+            string fullPath = string.Format(Path, name);
             GameObject obj = await Addressables.LoadAssetAsync<GameObject>(fullPath);
             if (obj == null)
             {
@@ -50,45 +50,45 @@ namespace Tools.PoolModule2
                 return;
             }
             
-            if (_pools.ContainsKey(id))
+            if (_pools.ContainsKey(name))
             {
-                Debug.LogWarning($"对象池已存在: {id}");
+                Debug.LogWarning($"对象池已存在: {name}");
                 return;
             }
             
             var pool = new ObjectPool<T>(item, initialCapacity, maxCapacity);
-            _pools.Add(id, pool);
+            _pools.Add(name, pool);
             Addressables.Release(obj);  // 可以直接释放预制体
         }
 
-        public async UniTask<T> Get(int id)
+        public async UniTask<T> Get(string name)
         {
-            if (!_pools.ContainsKey(id))
+            if (!_pools.ContainsKey(name))
             {
-                await CreatePool(id, InitialCapacity, MaxCapacity);
+                await CreatePool(name, InitialCapacity, MaxCapacity);
             }
-            return _pools[id].Get();
+            return _pools[name].Get();
         }
 
-        public async UniTask<T[]> Get(int id, int count)
+        public async UniTask<T[]> Get(string name, int count)
         {
-            if (!_pools.ContainsKey(id))
+            if (!_pools.ContainsKey(name))
             {
-                await CreatePool(id, InitialCapacity, MaxCapacity);
+                await CreatePool(name, InitialCapacity, MaxCapacity);
             }
-            return _pools[id].Get(count);
+            return _pools[name].Get(count);
         }
         
         public void Return(T obj)
         {
-            int id = obj.Id;
-            if (_pools.TryGetValue(id, out var pool))
+            string name = obj.Name;
+            if (_pools.TryGetValue(name, out var pool))
             {
                 pool.Return(obj);
             }
             else
             {
-                Debug.LogError($"未找到对象池: {id}");
+                Debug.LogError($"未找到对象池: {name}");
             }
         }
         
