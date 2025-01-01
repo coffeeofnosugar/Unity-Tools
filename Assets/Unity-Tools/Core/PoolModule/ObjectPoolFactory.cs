@@ -64,7 +64,7 @@ namespace Tools.PoolModule
         {
             if (_pools.TryGetValue(name, out var pool))
             {
-                return pool.Get(count);
+                return pool.GetMultiple(count);
             }
             
             Debug.LogError($"未找到对象池: {name}");

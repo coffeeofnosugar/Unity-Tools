@@ -76,7 +76,7 @@ namespace Tools.PoolModule
             {
                 await CreatePool(name, InitialCapacity, MaxCapacity);
             }
-            return _pools[name].Get(count);
+            return _pools[name].GetMultiple(count);
         }
         
         public void Return(T obj)

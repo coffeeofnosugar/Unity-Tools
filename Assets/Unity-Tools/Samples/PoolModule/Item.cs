@@ -6,10 +6,12 @@ namespace Tools.PoolModule.Sample
     public class Item : MonoBehaviour, IPoolable, IPoolableString
     {
         public float health;
-        public string name;
         public virtual string Name => name;
 
-        public void OnGet() { }
+        public void OnGet(params object[] args)
+        {
+            Debug.Log(args.Length > 0 ? args[0] : "No args");
+        }
 
         public void OnReturn() { }
 

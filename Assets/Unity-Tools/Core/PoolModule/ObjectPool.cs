@@ -41,7 +41,7 @@ namespace Tools.PoolModule
             Debug.Log($"成功创建对象池: {prefab.name} (初始容量: {initialCapacity}, 最大容量: {maxCapacity})");
         }
             
-        public T Get()
+        public T Get(params object[] args)
         {
             if (_pool.Count == 0)
                 CreateNewObject();
@@ -49,15 +49,15 @@ namespace Tools.PoolModule
             var pooledObject = _pool.Pop();
             _activeObject.Add(pooledObject);
             pooledObject.gameObject.SetActive(true);
-            pooledObject.OnGet();
+            pooledObject.OnGet(args);
             return pooledObject;
         }
 
-        public T[] Get(int count)
+        public T[] GetMultiple(int count, params object[] args)
         {
             T[] result = new T[count];
             for (int i = 0; i < count; i++)
-                result[i] = Get();
+                result[i] = Get(args);
             return result;
         }
         

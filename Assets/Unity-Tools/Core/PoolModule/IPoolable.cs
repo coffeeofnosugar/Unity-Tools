@@ -2,7 +2,7 @@
 {
     public interface IPoolable
     {
-        void OnGet();
+        void OnGet(params object[] args);
         void OnReturn();
     }
     
