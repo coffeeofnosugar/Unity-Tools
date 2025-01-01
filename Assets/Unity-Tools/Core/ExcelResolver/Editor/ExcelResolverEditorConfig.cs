@@ -4,9 +4,11 @@ using UnityEngine;
 namespace Tools.ExcelResolver.Editor
 {
     [InlineEditor(InlineEditorObjectFieldModes.CompletelyHidden)]
-    public class ExcelResolverEditorConfig : ScriptableObject
+    public sealed class ExcelResolverEditorConfig : ScriptableObject
     {
+        [ValueDropdown("@Tools.Editor.DirectoryUtil.GetFilePaths()")]
         public string ExcelPath;
+        [FolderPath]
         public string JsonPath;
     }
 }
