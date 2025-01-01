@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: 1d13601f81e915e44891c016b5ab159a
+  m_SerializeEntries:
+  - m_GUID: 109398aa73aa5ce49b10188459d21eaa
+    m_Address: Assets/Unity-Tools/Samples/PoolModule/PoolModule2/ItemA.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3783eba555fb0c8429962f7da6946667
+    m_Address: Assets/Unity-Tools/Samples/PoolModule/PoolModule2/ItemFactory2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9973f67245c82f9458dea8f860252f3e
+    m_Address: Assets/Unity-Tools/Samples/PoolModule/PoolModule2/ItemB.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b90baef751cc18844991577b67fec2c7
+    m_Address: Assets/Unity-Tools/Samples/PoolModule/PoolModule2/Item.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: dc2290f701b408d4ebfcabc78d715e06, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4a0522ff66c4c06499c12e1403c34854, type: 2}
+    - {fileID: 11400000, guid: b155ef3f32a42554f88df1a2e2da168c, type: 2}
