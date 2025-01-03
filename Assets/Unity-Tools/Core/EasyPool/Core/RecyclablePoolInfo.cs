@@ -14,7 +14,7 @@ namespace Tools.EasyPoolKit
         public int? MaxDespawnCount { get; private set; } = null;
         public PoolClearType ClearType { get; private set; } = PoolClearType.Default;
         public float? AutoClearTime { get; private set; } = null;
-        public bool IfIgnoreTimeScale { get; private set; } = false;
+        public bool IsIgnoreTimeScale { get; private set; } = false;
 
         public int CachedObjectCount => _getCachedCount?.Invoke() ?? 0;
         
@@ -49,7 +49,7 @@ namespace Tools.EasyPoolKit
             MaxDespawnCount = config.MaxDespawnCount;
             ClearType = config.ClearType;
             AutoClearTime = config.AutoClearTime;
-            IfIgnoreTimeScale = config.IfIgnoreTimeScale;
+            IsIgnoreTimeScale = config.IsIgnoreTimeScale;
 
             _getCachedCount = getCachedCount;
             _getUsedCount = getUsedCount;
@@ -78,7 +78,7 @@ namespace Tools.EasyPoolKit
                 .Append("==========").Append(ReferenceType.ToString()).Append('\n')
                 .Append("AutoClearTime:").Append((AutoClearTime.HasValue ? AutoClearTime.Value.ToString() : "-")).Append('\n')
                 .Append("==========").Append(ReferenceType.ToString()).Append('\n')
-                .Append("IfIgnoreTimeScale:").Append(IfIgnoreTimeScale.ToString()).Append('\n');
+                .Append("IfIgnoreTimeScale:").Append(IsIgnoreTimeScale.ToString()).Append('\n');
 
             return stringBuilder.ToString();
 #else

@@ -25,7 +25,7 @@ namespace Tools.EasyPoolKit
         public PoolReachMaxLimitType ReachMaxLimitType { get; private set; }
         public PoolDespawnDestroyType DespawnDestroyType { get; private set; }
         public PoolClearType ClearType { get; private set; }
-        public bool IfIgnoreTimeScale { get; private set; }
+        public bool IsIgnoreTimeScale { get; private set; }
         
         public int GetCachedObjectCount() => CachedQueue.Count;
         public int GetUsedObjectCount() => UsedList.Count;
@@ -55,7 +55,7 @@ namespace Tools.EasyPoolKit
             MaxSpawnCount = config.MaxSpawnCount;
             MaxDespawnCount = config.MaxDespawnCount;
             AutoClearTime = config.AutoClearTime;
-            IfIgnoreTimeScale = config.IfIgnoreTimeScale;
+            IsIgnoreTimeScale = config.IsIgnoreTimeScale;
             
             PoolInfo = new RecyclablePoolInfo(config, GetCachedObjectCount, GetUsedObjectCount, GetTotalObjectCount, this);
             
@@ -173,14 +173,14 @@ namespace Tools.EasyPoolKit
             }
             else
             {
-                bool ifReachLimit = false;
+                bool isReachLimit = false;
 
                 if (ReachMaxLimitType != PoolReachMaxLimitType.Default && MaxSpawnCount.HasValue)
                 {
-                    ifReachLimit = GetTotalObjectCount() >= MaxSpawnCount.Value;
+                    isReachLimit = GetTotalObjectCount() >= MaxSpawnCount.Value;
                 }
 
-                if (!ifReachLimit)
+                if (!isReachLimit)
                 {
                     cachedObj = CreateObject();
                 }
@@ -252,21 +252,21 @@ namespace Tools.EasyPoolKit
                 Debug.LogError($"EasyPoolKit == 无法回收该物体，该物体并不在使用物体队列中:{usedObj.name}");
             }
 
-            bool ifReachLimit = false;
+            bool isReachLimit = false;
 
             if (DespawnDestroyType == PoolDespawnDestroyType.DestroyToLimit)
             {
                 // if (MaxDespawnCount.HasValue && GetCachedObjectCount() > MaxDespawnCount.Value)
                 if (MaxDespawnCount.HasValue && GetCachedObjectCount() > MaxDespawnCount.Value)
                 {
-                    ifReachLimit = true;
+                    isReachLimit = true;
                 }
             }
 
             UsedList.Remove(usedNode);
             UsedTimeDic.Remove(usedObj.GetInstanceID());
 
-            if (ifReachLimit)
+            if (isReachLimit)
             {
                 DestroyPoolObject(usedObj);
             }
@@ -338,7 +338,11 @@ namespace Tools.EasyPoolKit
         
         private void PoolClearAll()
         {
-            ClearUnusedObjects();
+            foreach (var cachedItem in CachedQueue)
+            {
+                DestroyPoolObject(cachedItem);
+            }
+            CachedQueue.Clear();
 
             while (UsedList.Count > 0)
             {

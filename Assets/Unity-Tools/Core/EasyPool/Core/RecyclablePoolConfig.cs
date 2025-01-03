@@ -15,7 +15,7 @@ namespace Tools.EasyPoolKit
         public int? MaxDespawnCount = null;
         public PoolClearType ClearType = PoolClearType.Default;
         public float? AutoClearTime = null;
-        public bool IfIgnoreTimeScale = false;
+        public bool IsIgnoreTimeScale = false;
         public object[] ExtraArgs = Array.Empty<object>();
     }
 }

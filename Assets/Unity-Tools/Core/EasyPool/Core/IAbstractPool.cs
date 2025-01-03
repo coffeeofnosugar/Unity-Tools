@@ -31,7 +31,7 @@ namespace Tools.EasyPoolKit
         
         PoolClearType ClearType { get; }
 
-        bool IfIgnoreTimeScale { get; }
+        bool IsIgnoreTimeScale { get; }
 
         int GetCachedObjectCount();
 
