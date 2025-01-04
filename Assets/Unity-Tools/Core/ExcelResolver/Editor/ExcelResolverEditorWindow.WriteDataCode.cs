@@ -4,6 +4,8 @@ namespace Tools.ExcelResolver.Editor
 {
     public sealed partial class ExcelResolverEditorWindow
     {
+        private int[] keyIndex;
+        
         private void WriteTypeCode()
         {
             var code = new RootCode();
