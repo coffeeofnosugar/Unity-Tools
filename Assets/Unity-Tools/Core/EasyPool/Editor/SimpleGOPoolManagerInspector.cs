@@ -11,12 +11,12 @@ namespace Tools.EasyPoolKit.Editor
 
         public override void OnInspectorGUI()
         {
-            // if (!EditorApplication.isPlaying)
-            // {
-            //     EditorGUILayout.HelpBox("只在运行时可用。", MessageType.Info);
-            //     return;
-            // }
-            //
+            if (!EditorApplication.isPlaying)
+            {
+                EditorGUILayout.HelpBox("只在运行时可用。", MessageType.Info);
+                return;
+            }
+            
             var poolKit = target as SimpleGOPoolKit;
 
             if (poolKit)
