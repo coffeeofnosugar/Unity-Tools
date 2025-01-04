@@ -9,7 +9,7 @@ namespace Tools.ExcelResolver.Editor
 {
     public sealed partial class ExcelResolverEditorWindow : OdinEditorWindow
     {
-        [SerializeField] private ExcelResolverEditorConfig config;
+        [SerializeField] private ExcelResolverEditorConfig excelResolverConfig;
         
         [MenuItem("\u272dExcelResolver\u272d/ExcelResolverEditorWindow")]
         private static void OpenWindow()
@@ -21,7 +21,12 @@ namespace Tools.ExcelResolver.Editor
 
         protected override void Initialize()
         {
-            config ??= AssetDatabase.LoadAssetAtPath<ExcelResolverEditorConfig>("Assets/Unity-Tools/Core/ExcelResolver/Editor/ExcelResolverEditorConfig.asset");
+            if (excelResolverConfig == null)
+            {
+                string[] assetGuids = AssetDatabase.FindAssets($"ExcelResolverEditorConfig t:ExcelResolverEditorConfig");
+                string assetPath = AssetDatabase.GUIDToAssetPath(assetGuids[0]);
+                excelResolverConfig = AssetDatabase.LoadAssetAtPath<ExcelResolverEditorConfig>(assetPath);
+            }
         }
 
         [OnInspectorGUI]
