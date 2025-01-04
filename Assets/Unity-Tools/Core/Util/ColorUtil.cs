@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 namespace Tools
@@ -158,7 +159,7 @@ namespace Tools
 		{
 			if (ColorDictionary == null)
 			{
-				InitializeDictionary();
+				initializeDictionary();
 			}
 	        
 			if (index < ColorDictionary.Count)
@@ -169,6 +170,160 @@ namespace Tools
 			{
 				return Color.white;
 			}
+			
+			#region InitialiezDictionary
+
+			
+			static void initializeDictionary()
+			{
+				ColorDictionary = new Dictionary<int, Color>
+				{
+					{ 0, AliceBlue },
+					{ 1, AntiqueWhite },
+					{ 2, Aqua },
+					{ 3, Aquamarine },
+					{ 4, Azure },
+					{ 5, Beige },
+					{ 6, Bisque },
+					{ 7, Black },
+					{ 8, BlanchedAlmond },
+					{ 9, Blue },
+					{ 10, BlueViolet },
+					{ 11, Brown },
+					{ 12, Burlywood },
+					{ 13, CadetBlue },
+					{ 14, Chartreuse },
+					{ 15, Chocolate },
+					{ 16, Coral },
+					{ 17, CornflowerBlue },
+					{ 18, Cornsilk },
+					{ 19, Crimson },
+					{ 20, Cyan },
+					{ 21, DarkBlue },
+					{ 22, DarkCyan },
+					{ 23, DarkGoldenrod },
+					{ 24, DarkGray },
+					{ 25, DarkGreen },
+					{ 26, DarkKhaki },
+					{ 27, DarkMagenta },
+					{ 28, DarkOliveGreen },
+					{ 29, DarkOrange },
+					{ 30, DarkOrchid },
+					{ 31, DarkRed },
+					{ 32, DarkSalmon },
+					{ 33, DarkSeaGreen },
+					{ 34, DarkSlateBlue },
+					{ 35, DarkSlateGray },
+					{ 36, DarkTurquoise },
+					{ 37, DarkViolet },
+					{ 38, DeepPink },
+					{ 39, DeepSkyBlue },
+					{ 40, DimGray },
+					{ 41, DodgerBlue },
+					{ 42, FireBrick },
+					{ 43, FloralWhite },
+					{ 44, ForestGreen },
+					{ 45, Fuchsia },
+					{ 46, Gainsboro },
+					{ 47, GhostWhite },
+					{ 48, Gold },
+					{ 49, Goldenrod },
+					{ 50, Gray },
+					{ 51, Green },
+					{ 52, GreenYellow },
+					{ 53, Honeydew },
+					{ 54, HotPink },
+					{ 55, IndianRed },
+					{ 56, Indigo },
+					{ 57, Ivory },
+					{ 58, Khaki },
+					{ 59, Lavender },
+					{ 60, Lavenderblush },
+					{ 61, LawnGreen },
+					{ 62, LemonChiffon },
+					{ 63, LightBlue },
+					{ 64, LightCoral },
+					{ 65, LightCyan },
+					{ 66, LightGoldenodYellow },
+					{ 67, LightGray },
+					{ 68, LightGreen },
+					{ 69, LightPink },
+					{ 70, LightSalmon },
+					{ 71, LightSeaGreen },
+					{ 72, LightSkyBlue },
+					{ 73, LightSlateGray },
+					{ 74, LightSteelBlue },
+					{ 75, LightYellow },
+					{ 76, Lime },
+					{ 77, LimeGreen },
+					{ 78, Linen },
+					{ 79, Magenta },
+					{ 80, Maroon },
+					{ 81, MediumAquamarine },
+					{ 82, MediumBlue },
+					{ 83, MediumOrchid },
+					{ 84, MediumPurple },
+					{ 85, MediumSeaGreen },
+					{ 86, MediumSlateBlue },
+					{ 87, MediumSpringGreen },
+					{ 88, MediumTurquoise },
+					{ 89, MediumVioletRed },
+					{ 90, MidnightBlue },
+					{ 91, Mintcream },
+					{ 92, MistyRose },
+					{ 93, Moccasin },
+					{ 94, NavajoWhite },
+					{ 95, Navy },
+					{ 96, OldLace },
+					{ 97, Olive },
+					{ 98, Olivedrab },
+					{ 99, Orange },
+					{ 100, Orangered },
+					{ 101, Orchid },
+					{ 102, PaleGoldenrod },
+					{ 103, PaleGreen },
+					{ 104, PaleTurquoise },
+					{ 105, PaleVioletred },
+					{ 106, PapayaWhip },
+					{ 107, PeachPuff },
+					{ 108, Peru },
+					{ 109, Pink },
+					{ 110, Plum },
+					{ 111, PowderBlue },
+					{ 112, Purple },
+					{ 113, Red },
+					{ 114, RosyBrown },
+					{ 115, RoyalBlue },
+					{ 116, SaddleBrown },
+					{ 117, Salmon },
+					{ 118, SandyBrown },
+					{ 119, SeaGreen },
+					{ 120, Seashell },
+					{ 121, Sienna },
+					{ 122, Silver },
+					{ 123, SkyBlue },
+					{ 124, SlateBlue },
+					{ 125, SlateGray },
+					{ 126, Snow },
+					{ 127, SpringGreen },
+					{ 128, SteelBlue },
+					{ 129, Tan },
+					{ 130, Teal },
+					{ 131, Thistle },
+					{ 132, Tomato },
+					{ 133, Turquoise },
+					{ 134, Violet },
+					{ 135, Wheat },
+					{ 136, White },
+					{ 137, WhiteSmoke },
+					{ 138, Yellow },
+					{ 139, YellowGreen },
+					{ 140, ReunoYellow },
+					{ 141, BestRed }
+				};
+			}
+
+			#endregion
 		}
 		
 		public static Color RandomColor()
@@ -217,7 +372,6 @@ namespace Tools
 			};
 		}
 		
-
 		/// <summary>
 		/// 返回由两个指定颜色和 alpha 组成的简单渐变
 		/// </summary>
@@ -280,159 +434,55 @@ namespace Tools
 			}
 			return Color.Lerp(originalColor, resultColor, lerpAmount);
 		}
-
-		#region InitialiezDictionary
-
 		
-		private static void InitializeDictionary()
+		/// <summary>
+		/// 解析十六进制颜色字符串并返回对应的 Color 对象
+		/// </summary>
+		/// <param name="hex">十六进制颜色字符串（格式为 #RRGGBB）</param>
+		/// <returns>解析后的 Color 对象，如果格式错误则返回 Color.clear</returns>
+		public static Color ParseHexColor(string hex)
 		{
-			ColorDictionary = new Dictionary<int, Color>
+			if (hex.Length != 7 || !hex.StartsWith("#"))
 			{
-				{ 0, AliceBlue },
-				{ 1, AntiqueWhite },
-				{ 2, Aqua },
-				{ 3, Aquamarine },
-				{ 4, Azure },
-				{ 5, Beige },
-				{ 6, Bisque },
-				{ 7, Black },
-				{ 8, BlanchedAlmond },
-				{ 9, Blue },
-				{ 10, BlueViolet },
-				{ 11, Brown },
-				{ 12, Burlywood },
-				{ 13, CadetBlue },
-				{ 14, Chartreuse },
-				{ 15, Chocolate },
-				{ 16, Coral },
-				{ 17, CornflowerBlue },
-				{ 18, Cornsilk },
-				{ 19, Crimson },
-				{ 20, Cyan },
-				{ 21, DarkBlue },
-				{ 22, DarkCyan },
-				{ 23, DarkGoldenrod },
-				{ 24, DarkGray },
-				{ 25, DarkGreen },
-				{ 26, DarkKhaki },
-				{ 27, DarkMagenta },
-				{ 28, DarkOliveGreen },
-				{ 29, DarkOrange },
-				{ 30, DarkOrchid },
-				{ 31, DarkRed },
-				{ 32, DarkSalmon },
-				{ 33, DarkSeaGreen },
-				{ 34, DarkSlateBlue },
-				{ 35, DarkSlateGray },
-				{ 36, DarkTurquoise },
-				{ 37, DarkViolet },
-				{ 38, DeepPink },
-				{ 39, DeepSkyBlue },
-				{ 40, DimGray },
-				{ 41, DodgerBlue },
-				{ 42, FireBrick },
-				{ 43, FloralWhite },
-				{ 44, ForestGreen },
-				{ 45, Fuchsia },
-				{ 46, Gainsboro },
-				{ 47, GhostWhite },
-				{ 48, Gold },
-				{ 49, Goldenrod },
-				{ 50, Gray },
-				{ 51, Green },
-				{ 52, GreenYellow },
-				{ 53, Honeydew },
-				{ 54, HotPink },
-				{ 55, IndianRed },
-				{ 56, Indigo },
-				{ 57, Ivory },
-				{ 58, Khaki },
-				{ 59, Lavender },
-				{ 60, Lavenderblush },
-				{ 61, LawnGreen },
-				{ 62, LemonChiffon },
-				{ 63, LightBlue },
-				{ 64, LightCoral },
-				{ 65, LightCyan },
-				{ 66, LightGoldenodYellow },
-				{ 67, LightGray },
-				{ 68, LightGreen },
-				{ 69, LightPink },
-				{ 70, LightSalmon },
-				{ 71, LightSeaGreen },
-				{ 72, LightSkyBlue },
-				{ 73, LightSlateGray },
-				{ 74, LightSteelBlue },
-				{ 75, LightYellow },
-				{ 76, Lime },
-				{ 77, LimeGreen },
-				{ 78, Linen },
-				{ 79, Magenta },
-				{ 80, Maroon },
-				{ 81, MediumAquamarine },
-				{ 82, MediumBlue },
-				{ 83, MediumOrchid },
-				{ 84, MediumPurple },
-				{ 85, MediumSeaGreen },
-				{ 86, MediumSlateBlue },
-				{ 87, MediumSpringGreen },
-				{ 88, MediumTurquoise },
-				{ 89, MediumVioletRed },
-				{ 90, MidnightBlue },
-				{ 91, Mintcream },
-				{ 92, MistyRose },
-				{ 93, Moccasin },
-				{ 94, NavajoWhite },
-				{ 95, Navy },
-				{ 96, OldLace },
-				{ 97, Olive },
-				{ 98, Olivedrab },
-				{ 99, Orange },
-				{ 100, Orangered },
-				{ 101, Orchid },
-				{ 102, PaleGoldenrod },
-				{ 103, PaleGreen },
-				{ 104, PaleTurquoise },
-				{ 105, PaleVioletred },
-				{ 106, PapayaWhip },
-				{ 107, PeachPuff },
-				{ 108, Peru },
-				{ 109, Pink },
-				{ 110, Plum },
-				{ 111, PowderBlue },
-				{ 112, Purple },
-				{ 113, Red },
-				{ 114, RosyBrown },
-				{ 115, RoyalBlue },
-				{ 116, SaddleBrown },
-				{ 117, Salmon },
-				{ 118, SandyBrown },
-				{ 119, SeaGreen },
-				{ 120, Seashell },
-				{ 121, Sienna },
-				{ 122, Silver },
-				{ 123, SkyBlue },
-				{ 124, SlateBlue },
-				{ 125, SlateGray },
-				{ 126, Snow },
-				{ 127, SpringGreen },
-				{ 128, SteelBlue },
-				{ 129, Tan },
-				{ 130, Teal },
-				{ 131, Thistle },
-				{ 132, Tomato },
-				{ 133, Turquoise },
-				{ 134, Violet },
-				{ 135, Wheat },
-				{ 136, White },
-				{ 137, WhiteSmoke },
-				{ 138, Yellow },
-				{ 139, YellowGreen },
-				{ 140, ReunoYellow },
-				{ 141, BestRed }
-			};
-		}
+				Debug.LogError("颜色格式解析错误");
+				return Color.clear;
+			}
 
-		#endregion
+			var red   = int.Parse(hex[1..3], NumberStyles.HexNumber);
+			var green = int.Parse(hex[3..5], NumberStyles.HexNumber);
+			var blue  = int.Parse(hex[5..7], NumberStyles.HexNumber);
+			return new Color(red / 255f, green / 255f, blue / 255f);
+		}
+		
+		/// <summary>
+		/// 将颜色设置为完全透明
+		/// </summary>
+		/// <param name="self">要设置透明的 Color 对象</param>
+		/// <returns>设置为完全透明的 Color 对象</returns>
+		public static Color SetTransparent(this Color self)
+		{
+			return self.SetAlpha(0);
+		}
+		
+		/// <summary>
+		/// 将颜色的 alpha 通道值重置为完全不透明
+		/// </summary>
+		/// <param name="self">要重置 alpha 的 Color 对象</param>
+		/// <returns>设置为完全不透明的 Color 对象</returns>
+		public static Color ResetTransparent(this Color self)
+		{
+			return self.SetAlpha(1);
+		}
+		
+		/// <summary>
+		/// 设置颜色的 alpha 通道值
+		/// </summary>
+		/// <param name="self">要设置 alpha 的 Color 对象</param>
+		/// <param name="alpha">新的 alpha 值</param>
+		/// <returns>设置了新的 alpha 值的 Color 对象</returns>
+		public static Color SetAlpha(this Color self, float alpha)
+		{
+			return new Color(self.r, self.g, self.b, alpha);
+		}
     }
 }

@@ -15,6 +15,11 @@ namespace Tools.ExcelResolver.Editor
             GetWindow<ExcelResolverEditorWindow>().Show();
         }
 
+        protected override void Initialize()
+        {
+            config ??= AssetDatabase.LoadAssetAtPath<ExcelResolverEditorConfig>("Assets/Unity-Tools/Core/ExcelResolver/Editor/ExcelResolverEditorConfig.asset");
+        }
+
         [OnInspectorGUI]
         private void DrawGenerateButton()
         {
