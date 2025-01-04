@@ -14,7 +14,7 @@
 
         void OnObjectInit();
 
-        void OnObjectDeInit();
+        void OnObjectDestroyInit();
 
         void OnObjectSpawn();
 

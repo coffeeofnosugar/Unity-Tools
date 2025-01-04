@@ -14,6 +14,7 @@ namespace Tools.EasyPoolKit
         public PoolDespawnDestroyType DespawnDestroyType = PoolDespawnDestroyType.Default;
         public int? MaxDespawnCount = null;
         public PoolClearType ClearType = PoolClearType.Default;
+        /// 自动回收时间
         public float? AutoClearTime = null;
         public bool IsIgnoreTimeScale = false;
         public object[] ExtraArgs = Array.Empty<object>();

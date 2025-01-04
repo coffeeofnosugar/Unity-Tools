@@ -45,6 +45,8 @@ namespace Tools.EasyPoolKit
         
         private bool _ifAppQuit = false;
         
+        /// 检测是否已有对应的对象池
+        public bool IsPoolValid(int prefabHash) => _prefabTemplates.ContainsKey(prefabHash) && _gameObjPools.ContainsKey(prefabHash);
         
         private void Awake()
         {
@@ -77,12 +79,6 @@ namespace Tools.EasyPoolKit
             {
                 ClearAllPools(true);
             }
-        }
-        
-        /// 检测是否已有对应的对象池
-        public bool IsPoolValid(int prefabHash)
-        {
-            return _prefabTemplates.ContainsKey(prefabHash) && _gameObjPools.ContainsKey(prefabHash);
         }
 
         public SimpleGameObjectPool RegisterPrefab(GameObject prefabAsset, RecyclablePoolConfig config = null)

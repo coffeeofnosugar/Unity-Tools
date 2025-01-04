@@ -32,6 +32,7 @@ namespace Tools.EasyPoolKit
         public int GetTotalObjectCount() => CachedQueue.Count + UsedList.Count;
         
         protected RecyclablePoolInfo PoolInfo;
+        public RecyclablePoolInfo GetPoolInfoReadOnly() => PoolInfo;
 
         public SimpleGameObjectPool(RecyclablePoolConfig config)
         {
@@ -130,7 +131,7 @@ namespace Tools.EasyPoolKit
         protected virtual void OnObjectInit(GameObject usedObj){ }
         protected virtual void OnObjectEnqueue(GameObject usedObj) => usedObj.transform.SetParent(_cachedRoot, true);
         protected virtual void OnObjectDequeue(GameObject usedObj) => usedObj.transform.SetParent(null, true);
-        protected virtual void OnObjectDeInit(GameObject usedObj)
+        protected virtual void OnObjectDestroyInit(GameObject usedObj)
         {
             if (usedObj)
             {
@@ -279,28 +280,6 @@ namespace Tools.EasyPoolKit
             return true;
         }
 
-        public void ClearUnusedObjects()
-        {
-            foreach (var cachedItem in CachedQueue)
-            {
-                DestroyPoolObject(cachedItem);
-            }
-            CachedQueue.Clear();
-        }
-
-        public void ClearAll()
-        {
-            switch (ClearType)
-            {
-                case PoolClearType.Default:
-                    PoolClearAll();
-                    break;
-                case PoolClearType.ClearToLimit:
-                    PoolClearToLimit();
-                    break;
-            }
-        }
-
         public void OnPoolUpdate(float deltaTime)
         {
             if (UsedList.Count > 0)
@@ -326,79 +305,95 @@ namespace Tools.EasyPoolKit
             }
         }
 
-        public RecyclablePoolInfo GetPoolInfoReadOnly() => PoolInfo;
-
         private void DestroyPoolObject(GameObject poolObj)
         {
             if (poolObj)
             {
-                OnObjectDeInit(poolObj);
+                OnObjectDestroyInit(poolObj);
             }
         }
-        
-        private void PoolClearAll()
+
+        #region Clear
+
+        public void ClearUnusedObjects()
         {
             foreach (var cachedItem in CachedQueue)
             {
                 DestroyPoolObject(cachedItem);
             }
             CachedQueue.Clear();
+        }
 
-            while (UsedList.Count > 0)
+        public void ClearAll()
+        {
+            switch (ClearType)
             {
-                var firstNode = UsedList.First;
-                var firstObj = firstNode.Value;
-                UsedList.Remove(firstNode);
-                DestroyPoolObject(firstObj);
+                case PoolClearType.Default:
+                    poolClearAll();
+                    break;
+                case PoolClearType.ClearToLimit:
+                    poolClearToLimit();
+                    break;
             }
+        
+            void poolClearAll()
+            {
+                foreach (var cachedItem in CachedQueue)
+                {
+                    DestroyPoolObject(cachedItem);
+                }
+                CachedQueue.Clear();
 
-            UsedList.Clear();
+                while (UsedList.Count > 0)
+                {
+                    var firstNode = UsedList.First;
+                    var firstObj = firstNode.Value;
+                    UsedList.Remove(firstNode);
+                    DestroyPoolObject(firstObj);
+                }
+
+                UsedList.Clear();
+            }
+        
+            void poolClearToLimit()
+            {
+                if (!InitCreateCount.HasValue)
+                {
+                    poolClearAll();
+                    return;
+                }
+
+                poolClearRetain();
+
+                int removeCount = GetCachedObjectCount() - InitCreateCount.Value;
+
+                while (removeCount > 0)
+                {
+                    removeCount--;
+                    var cachedObj = CachedQueue.Dequeue();
+                    DestroyPoolObject(cachedObj);
+                }
+            
+                // 回收正在使用的物体
+                void poolClearRetain()
+                {
+                    while (UsedList.Count > 0)
+                    {
+                        var firstNode = UsedList.First;
+                        var firstObj = firstNode.Value;
+                        DespawnObject(firstObj);
+                    }
+                }
+            }
         }
         
-        private void PoolClearToLimit()
-        {
-            if (!InitCreateCount.HasValue)
-            {
-                PoolClearAll();
-                return;
-            }
 
-            PoolClearRetain();
-
-            int removeCount = GetCachedObjectCount() - InitCreateCount.Value;
-
-            while (removeCount > 0)
-            {
-                removeCount--;
-                var cachedObj = CachedQueue.Dequeue();
-                DestroyPoolObject(cachedObj);
-            }
-        }
-        
-        /// 回收正在使用的物体
-        private void PoolClearRetain()
-        {
-            while (UsedList.Count > 0)
-            {
-                var firstNode = UsedList.First;
-                var firstObj = firstNode.Value;
-                DespawnObject(firstObj);
-            }
-        }
+        #endregion
 
 
         #region Debug
-
-        public string GetDebugConfigInfo()
-        {
-            return PoolInfo?.GetDebugConfigInfo() ?? string.Empty;
-        }
-
-        public string GetDebugRunningInfo()
-        {
-            return PoolInfo?.GetDebugRunningInfo() ?? string.Empty;
-        }
-
+        public string GetDebugConfigInfo() => PoolInfo?.GetDebugConfigInfo() ?? string.Empty;
+        public string GetDebugRunningInfo() => PoolInfo?.GetDebugRunningInfo() ?? string.Empty;
         #endregion
     }
 }
