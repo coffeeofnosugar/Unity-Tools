@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9247b1b02271436ca893eadb1fa8bdce, type: 3}
   m_Name: ExcelResolverEditorConfig
   m_EditorClassIdentifier: 
-  ExcelPath: Assets/Unity-Tools/Core/ExcelResolver/Editor
-  JsonPath: 
+  ExcelPathRoot: Assets/ExcelResolver/Excel
+  JsonPathRoot: Assets/ExcelResolver/Json
+  CodePathRoot: Assets/Scripts/Generator/Excel
+  GenerateDataClassNameSpace: Tools.ExcelResolver
+  isInit: 0

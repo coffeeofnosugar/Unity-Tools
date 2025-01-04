@@ -1,18 +1,22 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace Tools.ExcelResolver.Editor
 {
-    public class ExcelResolverEditorWindow : OdinEditorWindow
+    public sealed partial class ExcelResolverEditorWindow : OdinEditorWindow
     {
-        public ExcelResolverEditorConfig config;
+        [SerializeField] private ExcelResolverEditorConfig config;
         
-        [MenuItem("Tools/ExcelResolver")]
+        [MenuItem("\u272dExcelResolver\u272d/ExcelResolverEditorWindow")]
         private static void OpenWindow()
         {
-            GetWindow<ExcelResolverEditorWindow>().Show();
+            var window = GetWindow<ExcelResolverEditorWindow>();
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(800, 500);
+            window.titleContent = new GUIContent("ExcelResolverEditorWindow");
         }
 
         protected override void Initialize()
@@ -33,6 +37,7 @@ namespace Tools.ExcelResolver.Editor
         private void Generate()
         {
             // 按钮逻辑
+            ReadExcel();
         }
     }
 }
