@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -35,10 +36,9 @@ namespace Tools.ExcelResolver.Editor
                 
                 WriteDataCode(classCodeData);
                 WriteSOCode(classCodeData);
-                CreateSO(classCodeData);
+                WriteSOData(worksheet, classCodeData);
             }
             
-            // AssetDatabase.Refresh();
         }
         
         private TableType CheckTableType(ExcelWorksheet worksheet, out int[] keyIndex)

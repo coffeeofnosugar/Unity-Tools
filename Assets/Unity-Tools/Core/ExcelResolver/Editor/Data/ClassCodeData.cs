@@ -6,11 +6,11 @@ namespace Tools.ExcelResolver.Editor
 {
     internal class ClassCodeData : IDisposable
     {
-        public TableType tableType;
-        public string className;
-        public FieldData[] fields;
-        public int[] keyIndex;
-        public FieldData[] keyField;
+        public readonly TableType tableType;
+        public readonly string className;
+        public readonly FieldData[] fields;
+        public readonly int[] keyIndex;
+        public readonly FieldData[] keyField;
 
         public ClassCodeData(TableType tableType, string className, FieldData[] fields, int[] keyIndex)
         {
@@ -28,10 +28,7 @@ namespace Tools.ExcelResolver.Editor
 
         public void Dispose()
         {
-            className = null;
             fields.ForEach(field => field.Dispose());
-            fields = null;
-            keyIndex = null;
         }
     }
 }
