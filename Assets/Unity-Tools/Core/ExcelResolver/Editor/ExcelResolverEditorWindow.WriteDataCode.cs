@@ -1,7 +1,16 @@
-﻿using Tools.Editor.CodeGenKit;
+﻿using System;
+using Tools.Editor.CodeGenKit;
 
 namespace Tools.ExcelResolver.Editor
 {
+    internal class FieldData
+    {
+        public string name;
+        public Type type;
+        public string description;
+        
+    }
+    
     public sealed partial class ExcelResolverEditorWindow
     {
         private int[] keyIndex;

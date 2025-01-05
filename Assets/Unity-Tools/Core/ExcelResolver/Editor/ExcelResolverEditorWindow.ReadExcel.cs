@@ -11,11 +11,11 @@ namespace Tools.ExcelResolver.Editor
     {
         private enum TableType
         {
-            SingleKeyTable, // 单主键表
-            UnionMultiKeyTable, // 多主键表（联合索引）
-            MultiKeyTable, // 多主键表（独立索引）
-            NotKetTable, // 无主键表
-            ColumnTable, // 纵表
+            SingleKeyTable,         // 单主键表
+            UnionMultiKeyTable,     // 多主键表（联合索引）
+            MultiKeyTable,          // 多主键表（独立索引）
+            NotKetTable,            // 无主键表
+            ColumnTable,            // 纵表
         }
 
 
@@ -38,10 +38,7 @@ namespace Tools.ExcelResolver.Editor
                 }
 
                 var type = CheckTableType(worksheet);
-                foreach (var i in keyIndex)
-                {
-                    Debug.Log($"{type}   {i}");
-                }
+                GetFieldData(worksheet);
             }
         }
         
@@ -50,7 +47,7 @@ namespace Tools.ExcelResolver.Editor
             var startColumn = worksheet.Dimension.Start.Column; // 起始列
             var endColumn = worksheet.Dimension.End.Column; // 结束列
 
-            string config = worksheet.Cells[1, 1].Value.ToString();
+            string config = worksheet.Cells[1, 1].Text;
             var type = TableType.SingleKeyTable;
             if (config.Contains("SingleKeyTable"))
             {
@@ -98,6 +95,10 @@ namespace Tools.ExcelResolver.Editor
             {
                 type = TableType.ColumnTable;
             }
+            else
+            {
+                Debug.LogError("配置错误");
+            }
 
             return type;
 
@@ -115,6 +116,21 @@ namespace Tools.ExcelResolver.Editor
                 }
 
                 return keyIndex;
+            }
+        }
+
+        private void GetFieldData(ExcelWorksheet worksheet)
+        {
+            var startColumn = worksheet.Dimension.Start.Column; // 起始列
+            var endColumn = worksheet.Dimension.End.Column; // 结束列
+            Debug.Log(endColumn);
+            for (int col = 2; col <= endColumn; col++)
+            {
+                FieldData fieldData = new FieldData();
+                fieldData.name = worksheet.Cells[2, col].Text;
+                fieldData.description = worksheet.Cells[4, col].Text;
+                fieldData.type = TypeUtil.GetType(worksheet.Cells[3, col].Text);
+                Debug.Log(fieldData.type);
             }
         }
     }
