@@ -3,9 +3,10 @@ using System.CodeDom;
 
 namespace Tools.ExcelResolver.Editor
 {
-    internal class FieldData : IDisposable
+    internal class FieldData
     {
         public int colIndex;
+        public bool isKey;
         
         public string varName;
         public string typeString;

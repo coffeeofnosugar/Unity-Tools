@@ -41,7 +41,8 @@ namespace Tools.ExcelResolver.Editor
             
                 for (int col = 2; col < worksheet.Dimension.End.Column; col++)
                 {
-                    
+                    var cell = worksheet.Cells[row, col];
+                    // object convertedValue = ExcelResolverUtil.ConvertCellValue(cell, classCodeData.fields[col], classCodeData.fieldNames[col - 2], classCodeData.className);
                 }
             }
         }

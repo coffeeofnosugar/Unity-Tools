@@ -61,7 +61,7 @@ namespace Tools.ExcelResolver.Editor
             switch (classCodeData.tableType)
             {
                 case TableType.SingleKeyTable:
-                    FieldData keyField = classCodeData.keyField[0];
+                    FieldData keyField = classCodeData.fields[classCodeData.keyIndex[0]];
                     CodeMemberField codeField = new CodeMemberField($"Dictionary<{keyField.typeString}, {classCodeData.className}>", "Data")
                     {
                         Attributes = MemberAttributes.Public,

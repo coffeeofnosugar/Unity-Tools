@@ -44,10 +44,10 @@ namespace Tools.ExcelResolver.Editor
             {
                 IsClass = true,
                 TypeAttributes = System.Reflection.TypeAttributes.Public,
-                CustomAttributes = new CodeAttributeDeclarationCollection()
-                {
-                    new CodeAttributeDeclaration("Serializable")
-                },
+                // CustomAttributes = new CodeAttributeDeclarationCollection()
+                // {
+                //     new CodeAttributeDeclaration("Serializable")
+                // },
                 BaseTypes =
                 {
                     new CodeTypeReference("ScriptableObject"),
@@ -60,7 +60,7 @@ namespace Tools.ExcelResolver.Editor
 
             #region 字段
 
-            foreach (var field in classCodeData.fields)
+            foreach (var field in classCodeData.fields.Values)
             {
                 CodeMemberField codeField = new CodeMemberField
                 {
@@ -71,8 +71,6 @@ namespace Tools.ExcelResolver.Editor
                     {
                         new CodeCommentStatement("<summary>", true),
                         new CodeCommentStatement(field.info, true),
-                        // new CodeCommentStatement($"<c>{field.description}</c>", true),
-                        // new CodeCommentStatement("</summary>", true),
                     },
                 };
                 if (!string.IsNullOrEmpty(field.description)) 

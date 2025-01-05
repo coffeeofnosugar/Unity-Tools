@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Tools.ExcelResolver.Editor
 {
-    public  static partial class ExcelResolverUtil
+    internal static partial class ExcelResolverUtil
     {
         /// <summary>
         /// 读取指定行的数据
         /// </summary>
-        public static List<string> ReadRow(ExcelWorksheet worksheet, int row, int colCount, string rowType)
+        internal static List<string> ReadRow(ExcelWorksheet worksheet, int row, int colCount, string rowType)
         {
             List<string> values = new(colCount);
             for (int col = 1; col <= colCount; col++)
@@ -36,11 +36,17 @@ namespace Tools.ExcelResolver.Editor
             }
             return values;
         }
+
+        // internal static object ConvertCellValue<T>(ExcelRange cell, T type, string header, string className)
+        // {
+        //     string cellValue = cell.Text.Trim();
+        //     
+        // }
         
         /// <summary>
         /// 通用的单元格 -> C# 对象转换
         /// </summary>
-        public static object ConvertCellValue(ExcelRange cell, string type, string header, string className)
+        internal static object ConvertCellValue(ExcelRange cell, string type, string header, string className)
         {
             try
             {
@@ -70,7 +76,7 @@ namespace Tools.ExcelResolver.Editor
         /// <summary>
         /// 返回类型的默认值 (包含 List<...> 场景)
         /// </summary>
-        public static object GetDefaultValue(string type)
+        internal static object GetDefaultValue(string type)
         {
             if (type.StartsWith("list<", StringComparison.OrdinalIgnoreCase) && type.EndsWith(">"))
             {
@@ -100,7 +106,7 @@ namespace Tools.ExcelResolver.Editor
         /// <summary>
         /// 转换逗号分隔的字符串到 List<...> (List<int>, List<string>, ...)
         /// </summary>
-        public static object ConvertToList(string cellValue, string type, string header, string className)
+        internal static object ConvertToList(string cellValue, string type, string header, string className)
         {
             var insideType = type.Substring(5, type.Length - 6).Trim();
             var splitted = string.IsNullOrEmpty(cellValue)
@@ -126,7 +132,7 @@ namespace Tools.ExcelResolver.Editor
             };
         }
         
-        public static readonly Dictionary<string, Func<string, object>> TypeConverters = new(StringComparer.OrdinalIgnoreCase)
+        internal static readonly Dictionary<string, Func<string, object>> TypeConverters = new(StringComparer.OrdinalIgnoreCase)
         {
             { "int", value => int.TryParse(value, out var intValue) ? intValue : 0 },
             { "float", value => float.TryParse(value, out var floatValue) ? floatValue : 0f },

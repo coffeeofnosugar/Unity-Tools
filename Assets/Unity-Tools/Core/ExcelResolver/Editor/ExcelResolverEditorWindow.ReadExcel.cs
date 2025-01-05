@@ -121,10 +121,11 @@ namespace Tools.ExcelResolver.Editor
             }
         }
 
-        private FieldData[] GetFieldData(ExcelWorksheet worksheet)
+        private Dictionary<int, FieldData> GetFieldData(ExcelWorksheet worksheet)
         {
-            List<FieldData> fieldDatas = new List<FieldData>();
+            var fieldDatas = new Dictionary<int, FieldData>();
             var endColumn = worksheet.Dimension.End.Column;
+            
             for (int col = 2; col <= endColumn; col++)
             {
                 FieldData fieldData = new FieldData
@@ -137,10 +138,10 @@ namespace Tools.ExcelResolver.Editor
                     description = worksheet.Cells[5, col].Text,
                     path = worksheet.Cells[6, col].Text,
                 };
-                fieldDatas.Add(fieldData);
+                fieldDatas.Add(col, fieldData);
             }
 
-            return fieldDatas.ToArray();
+            return fieldDatas;
         }
     }
 }

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Tools.ExcelResolver.Editor
 {
-    public  static partial class ExcelResolverUtil
+    internal static partial class ExcelResolverUtil
     {
         /// <summary>
         /// 类型缓存，避免重复反射查找
         /// </summary>
-        public static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
+        internal static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
         
         /// <summary>
         /// 通过类名(含命名空间)获取 Type，并缓存
         /// </summary>
-        public static Type GetOrCacheTypeByName(string typeName)
+        internal static Type GetOrCacheTypeByName(string typeName)
         {
             if (TypeCache.TryGetValue(typeName, out Type cachedType))
             {
@@ -31,7 +31,7 @@ namespace Tools.ExcelResolver.Editor
             return type;
         }
         
-        public static Type GetTypeFromAllAssemblies(string typeName)
+        internal static Type GetTypeFromAllAssemblies(string typeName)
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -46,7 +46,7 @@ namespace Tools.ExcelResolver.Editor
             throw new ArgumentException($"Unsupported type: {typeName}");
         }
 
-        public static void Dispose()
+        internal static void Dispose()
         {
             TypeCache.Clear();
         }
