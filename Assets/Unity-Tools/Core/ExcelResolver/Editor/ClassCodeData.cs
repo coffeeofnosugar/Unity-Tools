@@ -28,7 +28,7 @@ namespace Tools.ExcelResolver.Editor
     
     internal class FieldData : IDisposable
     {
-        public string name;
+        public string varName;
         public Type type;
         public string info;
         public string description;
@@ -36,7 +36,7 @@ namespace Tools.ExcelResolver.Editor
         
         public void Dispose()
         {
-            name = null;
+            varName = null;
             type = null;
             info = null;
             description = null;

@@ -38,7 +38,7 @@ namespace Tools.ExcelResolver.Editor
                 WriteSOCode(classCodeData);
             }
             
-            AssetDatabase.Refresh();
+            // AssetDatabase.Refresh();
         }
         
         private TableType CheckTableType(ExcelWorksheet worksheet, out int[] keyIndex)
@@ -128,7 +128,7 @@ namespace Tools.ExcelResolver.Editor
             {
                 FieldData fieldData = new FieldData
                 {
-                    name = worksheet.Cells[2, col].Text,
+                    varName = worksheet.Cells[2, col].Text,
                     type = TypeUtil.GetTypeByString(worksheet.Cells[3, col].Text),
                     info = worksheet.Cells[4, col].Text,
                     description = worksheet.Cells[5, col].Text,

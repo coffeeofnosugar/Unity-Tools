@@ -14,9 +14,16 @@ namespace Tools.ExcelResolver.Editor
         {
             string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}.cs";
             CodeCompileUnit compileUnit = new CodeCompileUnit();
+
+            #region 命名空间
+
             CodeNamespace codeNamespace = new CodeNamespace(excelResolverConfig.GenerateDataClassNameSpace);
             compileUnit.Namespaces.Add(codeNamespace);
             
+            #endregion
+
+            #region 引用
+
             string[] classImports = new string[]
             {
                 "System",
@@ -29,6 +36,10 @@ namespace Tools.ExcelResolver.Editor
                 codeNamespace.Imports.Add(new CodeNamespaceImport(import));
             }
             
+            #endregion
+
+            #region 类
+
             CodeTypeDeclaration classType = new CodeTypeDeclaration(classCodeData.className)
             {
                 IsClass = true,
@@ -41,18 +52,53 @@ namespace Tools.ExcelResolver.Editor
             };
             codeNamespace.Types.Add(classType);
             
+            #endregion
+
+            #region 字段
+
+            foreach (var field in classCodeData.fields)
+            {
+                CodeMemberField codeField = new CodeMemberField
+                {
+                    Attributes = MemberAttributes.Public,
+                    Name = field.varName,
+                    Type = new CodeTypeReference(field.type),
+                    Comments =
+                    {
+                        new CodeCommentStatement("<summary>", true),
+                        new CodeCommentStatement(field.info, true),
+                        // new CodeCommentStatement($"<c>{field.description}</c>", true),
+                        // new CodeCommentStatement("</summary>", true),
+                    },
+                };
+                if (!string.IsNullOrEmpty(field.description)) 
+                    codeField.Comments.Add(new CodeCommentStatement($"<c>{field.description}</c>", true));
+                codeField.Comments.Add(new CodeCommentStatement("</summary>", true));
+                classType.Members.Add(codeField);
+            }
+            
+            #endregion
+
+            #region 代码风格设置
+            
             CodeGeneratorOptions options = new CodeGeneratorOptions
             {
                 BracingStyle = "C",
-                BlankLinesBetweenMembers = false,
+                BlankLinesBetweenMembers = true,
                 VerbatimOrder = true,
             };
 
+            #endregion
+
+            #region 写入文件
+            
             using (StreamWriter writer = new StreamWriter(outputPath))
             {
                 CSharpCodeProvider provider = new CSharpCodeProvider();
                 provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
             }
+            
+            #endregion
         }
     }
 }

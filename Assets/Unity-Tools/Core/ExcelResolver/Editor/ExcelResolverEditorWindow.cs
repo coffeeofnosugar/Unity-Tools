@@ -42,7 +42,6 @@ namespace Tools.ExcelResolver.Editor
         [Button(ButtonSizes.Gigantic)]
         private void Generate()
         {
-            // 按钮逻辑
             ReadExcel();
         }
     }
