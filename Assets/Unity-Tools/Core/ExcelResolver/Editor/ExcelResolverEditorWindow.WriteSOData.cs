@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using OfficeOpenXml;
+using UnityEditor;
 using UnityEngine;
 
 namespace Tools.ExcelResolver.Editor
@@ -12,6 +14,11 @@ namespace Tools.ExcelResolver.Editor
         
         private void WriteSOData()
         {
+            if (classCodeDataDict == null)
+            {
+                ReadExcel();
+            }
+            
             foreach (var data in classCodeDataDict)
             {
                 var worksheet = data.Key;
@@ -46,14 +53,19 @@ namespace Tools.ExcelResolver.Editor
                 
                     ScriptableObject instance = ScriptableObject.CreateInstance(soType);
             
-                    for (int col = 2; col < classCodeData.fields.Keys.Max(); col++)
+                    for (int col = 2; col <= classCodeData.fields.Keys.Max(); col++)
                     {
                         var cell = worksheet.Cells[row, col];
                         if (string.IsNullOrEmpty(cell.Text)) continue;
                         
                         object convertedValue = ExcelResolverUtil.ConvertCellValue(cell, classCodeData.fields[col].type, classCodeData.className);
+                        FieldInfo fieldInfo = soType.GetField(classCodeData.fields[col].varName);
+                        if (fieldInfo == null) throw new Exception($"目标类中不存在字段：{classCodeData.fields[col].varName}");
+                        fieldInfo.SetValue(instance, convertedValue);
                     }
+                    AssetDatabase.CreateAsset(instance, $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}_{row - 6}.asset");
                 }
+                AssetDatabase.SaveAssets();
             }
         }
     }
