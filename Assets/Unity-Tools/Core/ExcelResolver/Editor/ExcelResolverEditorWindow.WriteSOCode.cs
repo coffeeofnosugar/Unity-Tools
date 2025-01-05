@@ -9,7 +9,7 @@ namespace Tools.ExcelResolver.Editor
     {
         private void WriteSOCode(ClassCodeData classCodeData)
         {
-            string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}.cs";
+            string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}SO.cs";
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             CodeNamespace codeNamespace = new CodeNamespace(excelResolverConfig.GenerateDataClassNameSpace);
             compileUnit.Namespaces.Add(codeNamespace);
@@ -26,13 +26,14 @@ namespace Tools.ExcelResolver.Editor
                 codeNamespace.Imports.Add(new CodeNamespaceImport(import));
             }
             
-            CodeTypeDeclaration classType = new CodeTypeDeclaration(classCodeData.className)
+            CodeTypeDeclaration classType = new CodeTypeDeclaration($"{classCodeData.className}SO")
             {
                 IsClass = true,
                 TypeAttributes = System.Reflection.TypeAttributes.Public,
                 BaseTypes =
                 {
-                    new CodeTypeReference("ScriptableObject")
+                    new CodeTypeReference("ScriptableObject"),
+                    new CodeTypeReference("IExcelSO"),
                 }
             };
             codeNamespace.Types.Add(classType);

@@ -1,5 +1,7 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.IO;
+using Microsoft.CSharp;
 
 /* 使用CodeCompileUnit需要将Edit->Project Settings->Player->Other Settings->Api Compatibility Level改为.NET 4.x（或.NET Framework） */
 
@@ -10,7 +12,7 @@ namespace Tools.ExcelResolver.Editor
     {
         private void WriteDataCode(ClassCodeData classCodeData)
         {
-            string path = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}.cs";
+            string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}.cs";
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             CodeNamespace codeNamespace = new CodeNamespace(excelResolverConfig.GenerateDataClassNameSpace);
             compileUnit.Namespaces.Add(codeNamespace);
@@ -34,29 +36,23 @@ namespace Tools.ExcelResolver.Editor
                 CustomAttributes = new CodeAttributeDeclarationCollection()
                 {
                     new CodeAttributeDeclaration("Serializable")
-                }
+                },
+                BaseTypes = { new CodeTypeReference("IExcelData") }
+            };
+            codeNamespace.Types.Add(classType);
+            
+            CodeGeneratorOptions options = new CodeGeneratorOptions
+            {
+                BracingStyle = "C",
+                BlankLinesBetweenMembers = false,
+                VerbatimOrder = true,
             };
 
-            // switch (classCodeData.tableType)
-            // {
-            //     case TableType.SingleKeyTable:
-            //         classType.BaseTypes.Add(new CodeTypeReference("Dictionary<int, " + classCodeData.className + ">"));
-            //         break;
-            //     case TableType.UnionMultiKeyTable:
-            //         classType.BaseTypes.Add(new CodeTypeReference("Dictionary<string, " + classCodeData.className + ">"));
-            //         break;
-            //     case TableType.MultiKeyTable:
-            //         classType.BaseTypes.Add(new CodeTypeReference("Dictionary<int, " + classCodeData.className + ">"));
-            //         break;
-            //     case TableType.NotKetTable:
-            //         classType.BaseTypes.Add(new CodeTypeReference("List<" + classCodeData.className + ">"));
-            //         break;
-            //     case TableType.ColumnTable:
-            //         classType.BaseTypes.Add(new CodeTypeReference("Dictionary<int, " + classCodeData.className + ">"));
-            //         break;
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
+            using (StreamWriter writer = new StreamWriter(outputPath))
+            {
+                CSharpCodeProvider provider = new CSharpCodeProvider();
+                provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
+            }
         }
     }
 }
