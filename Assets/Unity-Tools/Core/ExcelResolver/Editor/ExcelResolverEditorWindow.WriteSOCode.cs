@@ -1,5 +1,7 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.CSharp;
 
@@ -27,6 +29,7 @@ namespace Tools.ExcelResolver.Editor
                 "System.Collections",
                 "System.Collections.Generic",
                 "UnityEngine",
+                "Sirenix.OdinInspector",
             };
             foreach (var import in classImports)
             {
@@ -43,7 +46,7 @@ namespace Tools.ExcelResolver.Editor
                 TypeAttributes = System.Reflection.TypeAttributes.Public,
                 BaseTypes =
                 {
-                    new CodeTypeReference("ScriptableObject"),
+                    new CodeTypeReference("SerializedScriptableObject"),
                     new CodeTypeReference("IExcelSO"),
                 }
             };
@@ -51,7 +54,38 @@ namespace Tools.ExcelResolver.Editor
             
             #endregion
 
+            #region 字段
+            
+            List<CodeMemberField> codeFields = new List<CodeMemberField>();
 
+            switch (classCodeData.tableType)
+            {
+                case TableType.SingleKeyTable:
+                    FieldData keyField = classCodeData.keyField[0];
+                    CodeMemberField codeField = new CodeMemberField($"Dictionary<{keyField.typeString}, {classCodeData.className}>", "Data")
+                    {
+                        Attributes = MemberAttributes.Public,
+                    };
+                    codeFields.Add(codeField);
+                    break;
+                case TableType.UnionMultiKeyTable:
+                    break;
+                case TableType.MultiKeyTable:
+                    break;
+                case TableType.NotKetTable:
+                    break;
+                case TableType.ColumnTable:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            foreach (var codeField in codeFields)
+            {
+                classType.Members.Add(codeField);
+            }
+            
+            #endregion
 
 
 

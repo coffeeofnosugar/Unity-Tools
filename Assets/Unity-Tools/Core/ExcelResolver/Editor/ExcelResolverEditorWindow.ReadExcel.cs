@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -29,13 +28,14 @@ namespace Tools.ExcelResolver.Editor
                     continue;
                 }
 
-                var classCodeData = new ClassCodeData(CheckTableType(worksheet, out var keyIndex), excelFile.Name[..^5])
-                {
-                    fields = GetFieldData(worksheet),
-                    keyIndex = keyIndex
-                };
+                var fieldDatas = GetFieldData(worksheet);
+                var tableType = CheckTableType(worksheet, out var keyIndex);
+
+                var classCodeData = new ClassCodeData(tableType, excelFile.Name[..^5], fieldDatas, keyIndex);
+                
                 WriteDataCode(classCodeData);
                 WriteSOCode(classCodeData);
+                CreateSO(classCodeData);
             }
             
             // AssetDatabase.Refresh();
@@ -50,6 +50,7 @@ namespace Tools.ExcelResolver.Editor
             
             var type = TableType.SingleKeyTable;
             keyIndex = null;
+            
             if (config.Contains("SingleKeyTable"))
             {
                 type = TableType.SingleKeyTable;
@@ -128,7 +129,9 @@ namespace Tools.ExcelResolver.Editor
             {
                 FieldData fieldData = new FieldData
                 {
+                    colIndex = col,
                     varName = worksheet.Cells[2, col].Text,
+                    typeString = worksheet.Cells[3, col].Text,
                     type = TypeUtil.GetTypeByString(worksheet.Cells[3, col].Text),
                     info = worksheet.Cells[4, col].Text,
                     description = worksheet.Cells[5, col].Text,
