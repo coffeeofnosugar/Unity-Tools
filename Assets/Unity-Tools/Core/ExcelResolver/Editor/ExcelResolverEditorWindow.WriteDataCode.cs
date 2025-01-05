@@ -66,7 +66,7 @@ namespace Tools.ExcelResolver.Editor
                 {
                     Attributes = MemberAttributes.Public,
                     Name = field.varName,
-                    Type = new CodeTypeReference(field.type),
+                    Type = new CodeTypeReference(field.type.RealType),
                     Comments =
                     {
                         new CodeCommentStatement("<summary>", true),

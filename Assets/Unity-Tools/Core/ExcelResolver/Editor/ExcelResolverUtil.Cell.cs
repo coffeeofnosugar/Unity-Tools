@@ -37,11 +37,16 @@ namespace Tools.ExcelResolver.Editor
             return values;
         }
 
-        // internal static object ConvertCellValue<T>(ExcelRange cell, T type, string header, string className)
-        // {
-        //     string cellValue = cell.Text.Trim();
-        //     
-        // }
+        internal static object ConvertCellValue<T>(ExcelRange cell, T type, string className)
+            where T : TType
+        {
+            if (type.TryParseFrom(cell.Text, out var value))
+            {
+                return value;
+            }
+            
+            throw new Exception($"单元格转换失败  FullAddress:'{cell.FullAddress}'    Text:'{cell.Text}'  className:'{className}'");
+        }
         
         /// <summary>
         /// 通用的单元格 -> C# 对象转换

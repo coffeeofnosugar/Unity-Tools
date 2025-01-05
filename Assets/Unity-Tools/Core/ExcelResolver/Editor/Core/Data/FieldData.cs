@@ -10,7 +10,7 @@ namespace Tools.ExcelResolver.Editor
         
         public string varName;
         public string typeString;
-        public Type type;
+        public TType type;
         public string info;
         public string description;
         public string path;
@@ -33,7 +33,7 @@ namespace Tools.ExcelResolver.Editor
             {
                 Attributes = MemberAttributes.Public,
                 Name = field.varName,
-                Type = new CodeTypeReference(field.type),
+                Type = new CodeTypeReference(field.type.RealType),
                 CustomAttributes = new CodeAttributeDeclarationCollection()
                 {
                     new CodeAttributeDeclaration("SerializeField")

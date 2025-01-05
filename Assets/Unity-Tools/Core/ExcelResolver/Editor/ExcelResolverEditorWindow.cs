@@ -41,6 +41,6 @@ namespace Tools.ExcelResolver.Editor
         private void GenerateCode() => ReadExcel();
         
         [Button(ButtonSizes.Gigantic), HorizontalGroup("Split", 0.5f)]
-        private void GenerateSO() => ReadExcel();
+        private void GenerateSO() => WriteSOData();
     }
 }

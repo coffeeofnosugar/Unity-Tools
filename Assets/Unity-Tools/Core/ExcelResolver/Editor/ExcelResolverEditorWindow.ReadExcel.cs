@@ -13,10 +13,11 @@ namespace Tools.ExcelResolver.Editor
     {
         private void ReadExcel()
         {
+            classCodeDataDict = new Dictionary<ExcelWorksheet, ClassCodeData>();
+            
             // 获取Excel文件
             excelResolverConfig.MakeSureDirectory();
-            var excelFiles = new DirectoryInfo(excelResolverConfig.ExcelPathRoot).GetFiles("*.xlsx")
-                .Where(f => !f.Name.StartsWith("~$"));
+            var excelFiles = new DirectoryInfo(excelResolverConfig.ExcelPathRoot).GetFiles("*.xlsx").Where(f => !f.Name.StartsWith("~$"));
             foreach (var excelFile in excelFiles)
             {
                 using FileStream stream = File.Open(excelFile.FullName, FileMode.Open, FileAccess.Read,
@@ -36,6 +37,7 @@ namespace Tools.ExcelResolver.Editor
                 
                 WriteDataCode(classCodeData);
                 WriteSOCode(classCodeData);
+                classCodeDataDict.Add(worksheet, classCodeData);
                 // WriteSOData(worksheet, classCodeData);
             }
             AssetDatabase.Refresh();
@@ -128,12 +130,14 @@ namespace Tools.ExcelResolver.Editor
             
             for (int col = 2; col <= endColumn; col++)
             {
+                if (string.IsNullOrEmpty(worksheet.Cells[2, col].Text)) continue;
+                
                 FieldData fieldData = new FieldData
                 {
                     colIndex = col,
                     varName = worksheet.Cells[2, col].Text,
                     typeString = worksheet.Cells[3, col].Text,
-                    type = TypeUtil.GetTypeByString(worksheet.Cells[3, col].Text),
+                    type = TypeUtil.GetTTypeByString(worksheet.Cells[3, col].Text),
                     info = worksheet.Cells[4, col].Text,
                     description = worksheet.Cells[5, col].Text,
                     path = worksheet.Cells[6, col].Text,
