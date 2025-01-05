@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
@@ -9,16 +10,6 @@ namespace Tools.ExcelResolver.Editor
 {
     public sealed partial class ExcelResolverEditorWindow
     {
-        private enum TableType
-        {
-            SingleKeyTable,         // 单主键表
-            UnionMultiKeyTable,     // 多主键表（联合索引）
-            MultiKeyTable,          // 多主键表（独立索引）
-            NotKetTable,            // 无主键表
-            ColumnTable,            // 纵表
-        }
-
-
         private void ReadExcel()
         {
             // 获取Excel文件
@@ -37,18 +28,24 @@ namespace Tools.ExcelResolver.Editor
                     continue;
                 }
 
-                var type = CheckTableType(worksheet);
-                GetFieldData(worksheet);
+                var classCodeData = new ClassCodeData(CheckTableType(worksheet, out var keyIndex), excelFile.Name[..^5])
+                {
+                    fields = GetFieldData(worksheet),
+                    keyIndex = keyIndex
+                };
+                WriteSOCode(classCodeData);
             }
         }
         
-        private TableType CheckTableType(ExcelWorksheet worksheet)
+        private TableType CheckTableType(ExcelWorksheet worksheet, out int[] keyIndex)
         {
             var startColumn = worksheet.Dimension.Start.Column; // 起始列
             var endColumn = worksheet.Dimension.End.Column; // 结束列
 
             string config = worksheet.Cells[1, 1].Text;
+            
             var type = TableType.SingleKeyTable;
+            keyIndex = null;
             if (config.Contains("SingleKeyTable"))
             {
                 type = TableType.SingleKeyTable;
@@ -119,19 +116,24 @@ namespace Tools.ExcelResolver.Editor
             }
         }
 
-        private void GetFieldData(ExcelWorksheet worksheet)
+        private FieldData[] GetFieldData(ExcelWorksheet worksheet)
         {
-            var startColumn = worksheet.Dimension.Start.Column; // 起始列
-            var endColumn = worksheet.Dimension.End.Column; // 结束列
-            Debug.Log(endColumn);
+            List<FieldData> fieldDatas = new List<FieldData>();
+            var endColumn = worksheet.Dimension.End.Column;
             for (int col = 2; col <= endColumn; col++)
             {
-                FieldData fieldData = new FieldData();
-                fieldData.name = worksheet.Cells[2, col].Text;
-                fieldData.description = worksheet.Cells[4, col].Text;
-                fieldData.type = TypeUtil.GetType(worksheet.Cells[3, col].Text);
-                Debug.Log(fieldData.type);
+                FieldData fieldData = new FieldData
+                {
+                    name = worksheet.Cells[2, col].Text,
+                    type = TypeUtil.GetTypeByString(worksheet.Cells[3, col].Text),
+                    info = worksheet.Cells[4, col].Text,
+                    description = worksheet.Cells[5, col].Text,
+                    path = worksheet.Cells[6, col].Text,
+                };
+                fieldDatas.Add(fieldData);
             }
+
+            return fieldDatas.ToArray();
         }
     }
 }
