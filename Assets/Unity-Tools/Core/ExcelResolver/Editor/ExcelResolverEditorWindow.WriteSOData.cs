@@ -10,7 +10,6 @@ namespace Tools.ExcelResolver.Editor
     {
         private void WriteSOData(ExcelWorksheet worksheet, ClassCodeData classCodeData)
         {
-            ScriptableObject instance;
             Type soType = ExcelResolverUtil.GetOrCacheTypeByName(classCodeData.className);
             
             if (soType == null)
@@ -19,44 +18,29 @@ namespace Tools.ExcelResolver.Editor
                 return;
             }
             
-            string fullPath = $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}SO.asset";
-            
-            if (File.Exists(fullPath))
-            {
-                Debug.Log("已存在SO文件，无需创建");
-                
-            }
-            else
-            {
-                instance = ScriptableObject.CreateInstance(soType);
-                AssetDatabase.CreateAsset(instance, $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}SO.asset");
-                AssetDatabase.SaveAssets();
-            }
+            // string fullPath = $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}SO.asset";
+            //
+            // if (File.Exists(fullPath))
+            // {
+            //     Debug.Log("已存在SO文件，无需创建");
+            //     
+            // }
+            // else
+            // {
+            //     instance = ScriptableObject.CreateInstance(soType);
+            //     AssetDatabase.CreateAsset(instance, $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}SO.asset");
+            //     AssetDatabase.SaveAssets();
+            // }
             
             for (int row = 7; row < worksheet.Dimension.End.Row; row++)
             {
                 // 跳过注释行
                 if (worksheet.Cells[row, 1].Text == "##") continue;
+                
+                ScriptableObject instance = ScriptableObject.CreateInstance(soType);
             
                 for (int col = 2; col < worksheet.Dimension.End.Column; col++)
                 {
-                    var keyText = worksheet.Cells[row, classCodeData.keyField[0].colIndex].Text;
-                    switch (classCodeData.tableType)
-                    {
-                        case TableType.SingleKeyTable:
-                            
-                            break;
-                        case TableType.UnionMultiKeyTable:
-                            break;
-                        case TableType.MultiKeyTable:
-                            break;
-                        case TableType.NotKetTable:
-                            break;
-                        case TableType.ColumnTable:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
                     
                 }
             }

@@ -36,9 +36,9 @@ namespace Tools.ExcelResolver.Editor
                 
                 WriteDataCode(classCodeData);
                 WriteSOCode(classCodeData);
-                WriteSOData(worksheet, classCodeData);
+                // WriteSOData(worksheet, classCodeData);
             }
-            
+            AssetDatabase.Refresh();
         }
         
         private TableType CheckTableType(ExcelWorksheet worksheet, out int[] keyIndex)

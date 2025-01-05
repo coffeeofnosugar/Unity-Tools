@@ -11,7 +11,7 @@ namespace Tools.ExcelResolver.Editor
     {
         private void WriteSOCode(ClassCodeData classCodeData)
         {
-            string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}SO.cs";
+            string outputPath = $"{excelResolverConfig.CodePathRoot}/{classCodeData.className}Util.cs";
             CodeCompileUnit compileUnit = new CodeCompileUnit();
 
             #region 命名空间
@@ -40,7 +40,7 @@ namespace Tools.ExcelResolver.Editor
 
             #region 类
 
-            CodeTypeDeclaration classType = new CodeTypeDeclaration($"{classCodeData.className}SO")
+            CodeTypeDeclaration classType = new CodeTypeDeclaration($"{classCodeData.className}Util")
             {
                 IsClass = true,
                 TypeAttributes = System.Reflection.TypeAttributes.Public,

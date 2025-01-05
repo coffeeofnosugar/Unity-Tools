@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Tools.ExcelResolver.Editor
 {
-    public static class ExcelResolverUtil
+    public  static partial class ExcelResolverUtil
     {
         /// <summary>
         /// 类型缓存，避免重复反射查找

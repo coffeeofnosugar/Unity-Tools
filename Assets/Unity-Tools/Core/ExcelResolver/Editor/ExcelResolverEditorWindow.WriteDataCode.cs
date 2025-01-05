@@ -48,7 +48,11 @@ namespace Tools.ExcelResolver.Editor
                 {
                     new CodeAttributeDeclaration("Serializable")
                 },
-                BaseTypes = { new CodeTypeReference("IExcelData") }
+                BaseTypes =
+                {
+                    new CodeTypeReference("ScriptableObject"),
+                    new CodeTypeReference("IExcelData")
+                }
             };
             codeNamespace.Types.Add(classType);
             

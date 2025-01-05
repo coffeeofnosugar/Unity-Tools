@@ -1,3 +1,4 @@
+using System;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
@@ -29,20 +30,17 @@ namespace Tools.ExcelResolver.Editor
             }
         }
 
-        // [OnInspectorGUI]
-        // private void DrawGenerateButton()
-        // {
-        //     GUILayout.FlexibleSpace(); // 把空白区域推向上方
-        //     if (GUILayout.Button("Generate", GUILayout.Height(50)))
-        //     {
-        //         Generate();
-        //     }
-        // }
-
-        [Button(ButtonSizes.Gigantic)]
-        private void Generate()
+        [OnInspectorGUI]
+        private void DrawGenerateButton()
         {
-            ReadExcel();
+            GUILayout.FlexibleSpace(); // 把空白区域推向上方
         }
+
+
+        [Button(ButtonSizes.Gigantic), HorizontalGroup("Split", 0.5f)]
+        private void GenerateCode() => ReadExcel();
+        
+        [Button(ButtonSizes.Gigantic), HorizontalGroup("Split", 0.5f)]
+        private void GenerateSO() => ReadExcel();
     }
 }
