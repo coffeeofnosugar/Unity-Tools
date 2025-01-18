@@ -137,7 +137,7 @@ namespace Tools.ExcelResolver.Editor
                     colIndex = col,
                     varName = worksheet.Cells[2, col].Text,
                     typeString = worksheet.Cells[3, col].Text,
-                    type = TypeUtil.GetTTypeByString(worksheet.Cells[3, col].Text),
+                    type = ExcelResolverUtil.GetTTypeByString(worksheet.Cells[3, col].Text),
                     info = worksheet.Cells[4, col].Text,
                     description = worksheet.Cells[5, col].Text,
                     path = worksheet.Cells[6, col].Text,
