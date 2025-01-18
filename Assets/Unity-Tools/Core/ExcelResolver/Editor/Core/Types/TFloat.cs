@@ -2,13 +2,13 @@
 
 namespace Tools.ExcelResolver.Editor
 {
-    public class TFloat : TType
+    internal class TFloat : TType
     {
-        public override string TypeName => "float";
+        internal override string TypeName => "float";
 
-        public override Type RealType => typeof(float);
+        internal override Type RealType => typeof(float);
 
-        public override bool TryParseFrom(string s, out object o)
+        internal override bool TryParseFrom(string s, out object o)
         {
             if (float.TryParse(s, out float f))
             {

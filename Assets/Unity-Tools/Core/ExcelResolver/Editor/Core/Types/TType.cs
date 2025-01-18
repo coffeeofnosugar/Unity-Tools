@@ -2,12 +2,12 @@
 
 namespace Tools.ExcelResolver.Editor
 {
-    public abstract class TType
+    internal abstract class TType
     {
-        public abstract string TypeName { get; }
+        internal abstract string TypeName { get; }
         
-        public abstract Type RealType { get; }
+        internal abstract Type RealType { get; }
 
-        public abstract bool TryParseFrom(string s, out object o);
+        internal abstract bool TryParseFrom(string s, out object o);
     }
 }

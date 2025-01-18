@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Tools.ExcelResolver.Editor;
 using UnityEngine;
 
-namespace Tools
+namespace Tools.ExcelResolver.Editor
 {
-    public static class TypeUtil
+    internal static class TypeUtil
     {
         
-        public static TType GetTTypeByString(string typeText)
+        internal static TType GetTTypeByString(string typeText)
         {
             return typeText switch
             {
@@ -39,7 +38,7 @@ namespace Tools
             };
         }
         
-        public static Type GetTypeByString(string typeText)
+        internal static Type GetTypeByString(string typeText)
         {
             return typeText switch
             {
@@ -76,7 +75,7 @@ namespace Tools
         /// <param name="typeText"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Type GetType(string typeText)
+        internal static Type GetType(string typeText)
         {
             // 首先尝试使用Type.GetType
             Type type = Type.GetType($"System.{typeText}", false, true);
