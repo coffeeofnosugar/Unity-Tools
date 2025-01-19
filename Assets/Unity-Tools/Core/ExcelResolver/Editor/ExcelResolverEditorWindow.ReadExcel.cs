@@ -29,11 +29,15 @@ namespace Tools.ExcelResolver.Editor
                     Debug.LogError($"Excel:{excelFile.Name} don't have Sheet1 ！！");
                     continue;
                 }
-
+                
+                var classCodeData = new ClassCodeData(excelFile.Name[..^5]);
+                
                 var fieldDatas = GetFieldData(worksheet);
-                var tableType = CheckTableType(worksheet, out var keyIndex);
+                classCodeData.fields = fieldDatas;
+                var tableType = CheckTableType(worksheet, classCodeData.className, out var keyIndex);
+                classCodeData.tableType = tableType;
+                classCodeData.keyIndex = keyIndex;
 
-                var classCodeData = new ClassCodeData(tableType, excelFile.Name[..^5], fieldDatas, keyIndex);
                 
                 WriteDataCode(classCodeData);
                 WriteSOCode(classCodeData);
@@ -43,7 +47,7 @@ namespace Tools.ExcelResolver.Editor
             AssetDatabase.Refresh();
         }
         
-        private TableType CheckTableType(ExcelWorksheet worksheet, out int[] keyIndex)
+        private TableType CheckTableType(ExcelWorksheet worksheet, string className, out int[] keyIndex)
         {
             var startColumn = worksheet.Dimension.Start.Column; // 起始列
             var endColumn = worksheet.Dimension.End.Column; // 结束列
@@ -57,52 +61,52 @@ namespace Tools.ExcelResolver.Editor
             {
                 type = TableType.SingleKeyTable;
                 var configs = config.Split("|");
-                Assert.IsTrue(configs.Length >= 2, "SingleKeyTable配置错误");
+                Assert.IsTrue(configs.Length >= 2, $"'{className}'配置错误");
                 var key = configs[1];
                 var index = getKeyIndex(key);
-                Assert.IsTrue(index != -1, "SingleKeyTable配置错误");
+                Assert.IsTrue(index != -1, $"'{className}'配置错误");
                 keyIndex = new[] { index };
             }
-            else if (config.Contains("UnionMultiKeyTable"))
-            {
-                type = TableType.UnionMultiKeyTable;
-                var configs = config.Split("|");
-                Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
-                var keys = configs[1].Split(",");
-                keyIndex = new int[keys.Length];
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    var index = getKeyIndex(keys[i]);
-                    Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
-                    keyIndex[i] = index;
-                }
-            }
-            else if (config.Contains("MultiKeyTable"))
-            {
-                type = TableType.MultiKeyTable;
-                var configs = config.Split("|");
-                Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
-                var keys = configs[1].Split(",");
-                keyIndex = new int[keys.Length];
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    var index = getKeyIndex(keys[i]);
-                    Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
-                    keyIndex[i] = index;
-                }
-            }
-            else if (config.Contains("NotKetTable"))
-            {
-                type = TableType.NotKetTable;
-            }
-            else if (config.Contains("ColumnTable"))
-            {
-                type = TableType.ColumnTable;
-            }
-            else
-            {
-                Debug.LogError("配置错误");
-            }
+            // else if (config.Contains("UnionMultiKeyTable"))
+            // {
+            //     type = TableType.UnionMultiKeyTable;
+            //     var configs = config.Split("|");
+            //     Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
+            //     var keys = configs[1].Split(",");
+            //     keyIndex = new int[keys.Length];
+            //     for (int i = 0; i < keys.Length; i++)
+            //     {
+            //         var index = getKeyIndex(keys[i]);
+            //         Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
+            //         keyIndex[i] = index;
+            //     }
+            // }
+            // else if (config.Contains("MultiKeyTable"))
+            // {
+            //     type = TableType.MultiKeyTable;
+            //     var configs = config.Split("|");
+            //     Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
+            //     var keys = configs[1].Split(",");
+            //     keyIndex = new int[keys.Length];
+            //     for (int i = 0; i < keys.Length; i++)
+            //     {
+            //         var index = getKeyIndex(keys[i]);
+            //         Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
+            //         keyIndex[i] = index;
+            //     }
+            // }
+            // else if (config.Contains("NotKetTable"))
+            // {
+            //     type = TableType.NotKetTable;
+            // }
+            // else if (config.Contains("ColumnTable"))
+            // {
+            //     type = TableType.ColumnTable;
+            // }
+            // else
+            // {
+            //     Debug.LogError("配置错误");
+            // }
 
             return type;
 
@@ -126,16 +130,16 @@ namespace Tools.ExcelResolver.Editor
         private Dictionary<int, FieldData> GetFieldData(ExcelWorksheet worksheet)
         {
             var fieldDatas = new Dictionary<int, FieldData>();
-            var endColumn = worksheet.Dimension.End.Column;
             
-            for (int col = 2; col <= endColumn; col++)
+            for (int col = 2; col <= worksheet.Dimension.End.Column; col++)
             {
-                if (string.IsNullOrEmpty(worksheet.Cells[2, col].Text)) continue;
+                var cellText = worksheet.Cells[2, col].Text;
+                if (string.IsNullOrEmpty(cellText) || cellText == "##") continue;
                 
                 FieldData fieldData = new FieldData
                 {
                     colIndex = col,
-                    varName = worksheet.Cells[2, col].Text,
+                    varName = cellText,
                     typeString = worksheet.Cells[3, col].Text,
                     type = ExcelResolverUtil.GetTTypeByString(worksheet.Cells[3, col].Text),
                     info = worksheet.Cells[4, col].Text,

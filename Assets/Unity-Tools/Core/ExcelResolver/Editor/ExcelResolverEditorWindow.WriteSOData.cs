@@ -19,10 +19,10 @@ namespace Tools.ExcelResolver.Editor
                 ReadExcel();
             }
             
-            foreach (var pair in classCodeDataDict)
+            foreach (var classCodeDataDictPair in classCodeDataDict)
             {
-                var worksheet = pair.Key;
-                var classCodeData = pair.Value;
+                var worksheet = classCodeDataDictPair.Key;
+                var classCodeData = classCodeDataDictPair.Value;
                 
                 Type soType = ExcelResolverUtil.GetOrCacheTypeByName(classCodeData.className);
             
@@ -52,15 +52,18 @@ namespace Tools.ExcelResolver.Editor
                     if (worksheet.Cells[row, 1].Text == "##") continue;
                 
                     ScriptableObject instance = ScriptableObject.CreateInstance(soType);
-            
-                    for (int col = 2; col <= classCodeData.fields.Keys.Max(); col++)
+
+                    foreach (var pair in classCodeData.fields)
                     {
+                        var col = pair.Key;
+                        var fieldData = pair.Value;
+                        
                         var cell = worksheet.Cells[row, col];
                         if (string.IsNullOrEmpty(cell.Text)) continue;
-                        
-                        object convertedValue = ExcelResolverUtil.ConvertCellValue(cell, classCodeData.fields[col].type, classCodeData.className);
-                        FieldInfo fieldInfo = soType.GetField(classCodeData.fields[col].varName);
-                        if (fieldInfo == null) throw new Exception($"目标类中不存在字段：{classCodeData.fields[col].varName}");
+
+                        object convertedValue = ExcelResolverUtil.ConvertCellValue(cell, fieldData.type, classCodeData.className);
+                        FieldInfo fieldInfo = soType.GetField(fieldData.varName);
+                        if (fieldInfo == null) throw new Exception($"目标类中不存在字段：{fieldData.varName}");
                         fieldInfo.SetValue(instance, convertedValue);
                     }
                     AssetDatabase.CreateAsset(instance, $"{excelResolverConfig.SOPathRoot}/{classCodeData.className}_{row - 6}.asset");
