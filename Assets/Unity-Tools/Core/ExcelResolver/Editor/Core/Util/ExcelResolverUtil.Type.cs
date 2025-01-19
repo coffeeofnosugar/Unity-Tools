@@ -1,81 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Tools.ExcelResolver.Editor
 {
     internal static partial class ExcelResolverUtil
     {
+        /// <summary>
+        /// 类型缓存，避免重复反射查找
+        /// StringComparer.OrdinalIgnoreCase: 忽略键的大小写
+        /// </summary>
+        static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
         
-        internal static TType GetTTypeByString(string typeText)
+        /// <summary>
+        /// 通过类名(含命名空间)获取 Type，并缓存
+        /// </summary>
+        internal static Type GetOrCacheTypeByName(string typeName)
         {
-            return typeText switch
+            typeName = typeName.Trim();
+
+            // 如果缓存中存在，直接返回
+            if (TypeCache.TryGetValue(typeName, out var result))
             {
-                "int" => new TInt(),
-                "float" => new TFloat(),
-                "string" => new TString(),
-                "bool" => new TBool(),
-                // "Vector2" => typeof(Vector2),
-                // "Vector3" => typeof(Vector3),
-                //
-                // "List<int>" => typeof(List<int>),
-                // "List<float>" => typeof(List<float>),
-                // "List<string>" => typeof(List<string>),
-                // "List<bool>" => typeof(List<bool>),
-                // "List<Vector2>" => typeof(List<Vector2>),
-                // "List<Vector3>" => typeof(List<Vector3>),
-                //
-                // "List<List<int>>" => typeof(List<List<int>>),
-                // "List<List<float>>" => typeof(List<List<float>>),
-                // "List<List<string>>" => typeof(List<List<string>>),
-                // "List<List<bool>>" => typeof(List<List<bool>>),
-                // "List<List<Vector2>>" => typeof(List<List<Vector2>>),
-                // "List<List<Vector3>>" => typeof(List<List<Vector3>>),
-                //
-                // "enum" => typeof(Enum),
-                // "DateTime" => typeof(DateTime),
-                // _ => GetType(typeText)
-            };
+                return result;
+            }
+
+            // 尝试从 Tools.ExcelResolver 命名空间下查找
+            string fullTypeName = $"Tools.ExcelResolver.{typeName}";
+            result = Type.GetType(fullTypeName, false, true) ?? GetTypeFromNecessaryAssemblies(fullTypeName);
+            if (result != null)
+            {
+                return result;
+            }
+            
+            throw new ArgumentException($"Unsupported type: {typeName}");
         }
         
-        internal static Type GetTypeByString(string typeText)
+        /// <summary>
+        /// 从所有程序集中查找类型
+        /// </summary>
+        /// <param name="fullTypeName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        static Type GetTypeFromNecessaryAssemblies(string fullTypeName)
         {
-            return typeText switch
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => a.GetName().Name 
+                    is "UnityEngine"
+                    or "Assembly-CSharp"
+                    or "Assembly-CSharp-firstpass"
+                    or "Assembly-CSharp-Editor"
+                    or "Assembly-CSharp-Editor-firstpass");
+            
+            foreach (var assembly in assemblies)
             {
-                "int" => typeof(int),
-                "float" => typeof(float),
-                "string" => typeof(string),
-                "bool" => typeof(bool),
-                "Vector2" => typeof(Vector2),
-                "Vector3" => typeof(Vector3),
-                
-                "List<int>" => typeof(List<int>),
-                "List<float>" => typeof(List<float>),
-                "List<string>" => typeof(List<string>),
-                "List<bool>" => typeof(List<bool>),
-                "List<Vector2>" => typeof(List<Vector2>),
-                "List<Vector3>" => typeof(List<Vector3>),
-                
-                "List<List<int>>" => typeof(List<List<int>>),
-                "List<List<float>>" => typeof(List<List<float>>),
-                "List<List<string>>" => typeof(List<List<string>>),
-                "List<List<bool>>" => typeof(List<List<bool>>),
-                "List<List<Vector2>>" => typeof(List<List<Vector2>>),
-                "List<List<Vector3>>" => typeof(List<List<Vector3>>),
-                
-                "enum" => typeof(Enum),
-                "DateTime" => typeof(DateTime),
-                _ => GetType(typeText)
-            };
+                var type = assembly.GetType(fullTypeName);
+                if (assembly.GetName().Name is "Assembly-CSharp-Editor" or "Assembly-CSharp-Editor-firstpass")
+                {
+                    throw new ArgumentException($"不支持Editor目录下的'{fullTypeName}'类型");
+                }
+                if (type != null)
+                {
+                    TypeCache[fullTypeName] = type;
+                    return type;
+                }
+            }
+
+            return null;
+        }
+
+        internal static void Dispose()
+        {
+            TypeCache.Clear();
         }
         
+        /*
         /// <summary>
         /// 参考：https://learn.microsoft.com/zh-cn/dotnet/api/system.type.gettype?view=net-8.0
         /// </summary>
         /// <param name="typeText"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        internal static Type GetType(string typeText)
+        static Type GetType(string typeText)
         {
             // 首先尝试使用Type.GetType
             Type type = Type.GetType($"System.{typeText}", false, true);
@@ -90,51 +97,6 @@ namespace Tools.ExcelResolver.Editor
             
             throw new ArgumentException($"Unsupported type: {typeText}");
         }
-        
-        /// <summary>
-        /// 类型缓存，避免重复反射查找
-        /// </summary>
-        internal static readonly Dictionary<string, Type> TypeCache = new(StringComparer.OrdinalIgnoreCase);
-        
-        /// <summary>
-        /// 通过类名(含命名空间)获取 Type，并缓存
-        /// </summary>
-        internal static Type GetOrCacheTypeByName(string typeName)
-        {
-            if (TypeCache.TryGetValue(typeName, out Type cachedType))
-            {
-                return cachedType;
-            }
-
-            string namespacedType = $"Tools.ExcelResolver.{typeName}";
-            Type type = Type.GetType(namespacedType, false, true) ?? GetTypeFromAllAssemblies(namespacedType);
-
-            if (type != null)
-            {
-                TypeCache[typeName] = type;
-            }
-
-            return type;
-        }
-        
-        internal static Type GetTypeFromAllAssemblies(string typeName)
-        {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                var type = assembly.GetType(typeName);
-                if (type != null)
-                {
-                    TypeCache[typeName] = type;
-                    return type;
-                }
-            }
-            
-            throw new ArgumentException($"Unsupported type: {typeName}");
-        }
-
-        internal static void Dispose()
-        {
-            TypeCache.Clear();
-        }
+        */
     }
 }

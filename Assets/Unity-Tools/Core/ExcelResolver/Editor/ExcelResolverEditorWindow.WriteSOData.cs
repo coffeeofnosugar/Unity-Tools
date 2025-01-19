@@ -19,10 +19,10 @@ namespace Tools.ExcelResolver.Editor
                 ReadExcel();
             }
             
-            foreach (var data in classCodeDataDict)
+            foreach (var pair in classCodeDataDict)
             {
-                var worksheet = data.Key;
-                var classCodeData = data.Value;
+                var worksheet = pair.Key;
+                var classCodeData = pair.Value;
                 
                 Type soType = ExcelResolverUtil.GetOrCacheTypeByName(classCodeData.className);
             
