@@ -64,5 +64,20 @@ namespace Tools.Editor
             var endIndex  = Mathf.Max(endIndex1, endIndex2);
             return path[..endIndex];
         }
+        
+        /// <summary>
+        /// 删除目录下所有子目录和文件。
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool DeleteDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return false;
+            }
+            Directory.Delete(path, true);
+            return true;
+        }
     }
 }

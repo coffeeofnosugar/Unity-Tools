@@ -1,8 +1,8 @@
-using System;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
+using Tools.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,6 +30,18 @@ namespace Tools.ExcelResolver.Editor
             }
         }
 
+        [FoldoutGroup("Hide Setting")]
+        [Button(SdfIconType.ExclamationDiamond, "删除所有生成的代码和SO"), GUIColor(1f, 0f, 0f)]
+        public void DeleteAllScriptsAndSO()
+        {
+            if (EditorUtility.DisplayDialog("警告", "确定要删除所有生成的代码和SO吗？", "确定", "取消"))
+            {
+                DirectoryUtil.DeleteDirectory(excelResolverConfig.CodePathRoot);
+                DirectoryUtil.DeleteDirectory(excelResolverConfig.SOPathRoot);
+                AssetDatabase.Refresh();
+            }
+        }
+
         [OnInspectorGUI]
         private void DrawGenerateButton()
         {
@@ -37,10 +49,11 @@ namespace Tools.ExcelResolver.Editor
         }
 
 
-        [Button(ButtonSizes.Gigantic), HorizontalGroup("Split", 0.5f)]
+        [Button(ButtonSizes.Gigantic)]
+        [ButtonGroup("Generate")]
         private void GenerateCode() => ReadExcel();
         
-        [Button(ButtonSizes.Gigantic), HorizontalGroup("Split", 0.5f)]
+        [ButtonGroup("Generate")]
         private void GenerateSO() => WriteSOData();
     }
 }
