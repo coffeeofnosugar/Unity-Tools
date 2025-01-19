@@ -49,11 +49,10 @@ namespace Tools.ExcelResolver.Editor
         }
 
 
-        [Button(ButtonSizes.Gigantic)]
-        [ButtonGroup("Generate")]
-        private void GenerateCode() => ReadExcel();
+        [Button("导表", ButtonSizes.Gigantic)]
+        private void StartExportExcel() => ReadExcel();
         
-        [ButtonGroup("Generate")]
-        private void GenerateSO() => WriteSOData();
+        // [ButtonGroup("Generate")]
+        // private void GenerateSO() => WriteSOData();
     }
 }

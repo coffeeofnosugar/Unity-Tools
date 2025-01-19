@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using OfficeOpenXml;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,13 +10,14 @@ namespace Tools.ExcelResolver.Editor
 {
     public sealed partial class ExcelResolverEditorWindow
     {
-        private Dictionary<ExcelWorksheet, ClassCodeData> classCodeDataDict;
+        [FoldoutGroup("Hide Setting")]
+        [ShowInInspector] private Dictionary<ExcelWorksheet, ClassCodeData> classCodeDataDict;
         
         private void WriteSOData()
         {
             if (classCodeDataDict == null)
             {
-                ReadExcel();
+                ReadExcel(false);
             }
             
             foreach (var classCodeDataDictPair in classCodeDataDict)

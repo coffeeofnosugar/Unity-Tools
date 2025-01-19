@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using OfficeOpenXml;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,7 +11,7 @@ namespace Tools.ExcelResolver.Editor
 {
     public sealed partial class ExcelResolverEditorWindow
     {
-        private void ReadExcel()
+        private void ReadExcel(bool needWrite = true)
         {
             classCodeDataDict = new Dictionary<ExcelWorksheet, ClassCodeData>();
             
@@ -34,16 +35,46 @@ namespace Tools.ExcelResolver.Editor
                 classCodeData.fields = GetFieldData(worksheet, classCodeData);
                 classCodeData.tableType = CheckTableType(worksheet, classCodeData);
 
-                
-                WriteDataCode(classCodeData);
-                WriteSOCode(classCodeData);
+                if (needWrite)
+                {
+                    WriteDataCode(classCodeData);
+                    WriteSOCode(classCodeData);
+                }
                 classCodeDataDict.Add(worksheet, classCodeData);
                 // WriteSOData(worksheet, classCodeData);
             }
+            
             AssetDatabase.Refresh();
+            if (EditorApplication.isCompiling)
+            {
+                CompilationPipeline.compilationFinished += CompilationFinished;
+            }
+            else
+            {
+                WriteSOData();
+            }
         }
-        
-        private TableType CheckTableType(ExcelWorksheet worksheet, ClassCodeData classCodeData)
+
+        private bool isCompilationFinished;
+        private void CompilationFinished(object obj)
+        {
+            CompilationPipeline.compilationFinished -= CompilationFinished;
+            Debug.Log("编译完成");
+            isCompilationFinished = true;
+        }
+
+        private void Update()
+        {
+            if (isCompilationFinished && System.AppDomain.CurrentDomain.GetAssemblies()
+                    .Any(a => a.GetName().Name == "Assembly-CSharp"))
+            {
+                isCompilationFinished = false;
+                Debug.Log("Assembly-CSharp加载完成，开始写入SO数据");
+                WriteSOData();
+            }
+        }
+
+        private static TableType CheckTableType(ExcelWorksheet worksheet, ClassCodeData classCodeData)
         {
             var tableType = TableType.SingleKeyTable;
 
