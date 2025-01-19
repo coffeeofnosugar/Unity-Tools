@@ -4,11 +4,11 @@ namespace Tools.ExcelResolver.Editor
 {
     internal class TString : TType
     {
-        internal override string TypeName => "string";
+        internal override string FieldWriteFormat => "System.string";
 
         internal override bool String2TType(string typeText)
         {
-            return string.Equals(typeText, TypeName, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(typeText, "string", StringComparison.OrdinalIgnoreCase);
         }
 
         internal override Type RealType => typeof(string);

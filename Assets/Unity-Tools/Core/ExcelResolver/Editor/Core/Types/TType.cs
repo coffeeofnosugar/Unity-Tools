@@ -4,7 +4,7 @@ namespace Tools.ExcelResolver.Editor
 {
     internal abstract class TType
     {
-        internal abstract string TypeName { get; }
+        internal abstract string FieldWriteFormat { get; }
         
         internal abstract bool String2TType(string typeText);
         

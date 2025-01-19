@@ -15,6 +15,7 @@ MonoBehaviour:
   id: 2
   name: "\u5973\u5DEB"
   icon: hero_3
+  has: 0
   hp: 80
   atk: 8
   speed: 1.1

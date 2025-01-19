@@ -4,11 +4,11 @@ namespace Tools.ExcelResolver.Editor
 {
     internal class TBool : TType
     {
-        internal override string TypeName => "bool";
+        internal override string FieldWriteFormat => "System.Boolean";
 
         internal override bool String2TType(string typeText)
         {
-            return string.Equals(typeText, TypeName, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(typeText, "bool", StringComparison.OrdinalIgnoreCase);
         }
 
         internal override Type RealType => typeof(bool);
@@ -19,6 +19,12 @@ namespace Tools.ExcelResolver.Editor
             {
                 return result;
             }
+
+            if (cellText is "1")
+            {
+                return true;
+            }
+            
             return null;
         }
     }

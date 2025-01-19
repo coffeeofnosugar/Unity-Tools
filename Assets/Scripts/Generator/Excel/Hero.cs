@@ -35,6 +35,11 @@ namespace Tools.ExcelResolver
         public string icon;
         
         /// <summary>
+        /// 有宠物
+        /// </summary>
+        public bool has;
+        
+        /// <summary>
         /// 血量
         /// </summary>
         public int hp;
@@ -52,11 +57,11 @@ namespace Tools.ExcelResolver
         /// <summary>
         /// 位置
         /// </summary>
-        public UnityEngine.Vector3 pos;
+        public Vector3 pos;
         
         /// <summary>
         /// 位置
         /// </summary>
-        public UnityEngine.Vector2 ches;
+        public Vector2 ches;
     }
 }

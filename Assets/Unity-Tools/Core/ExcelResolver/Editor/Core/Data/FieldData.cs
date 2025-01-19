@@ -21,7 +21,7 @@ namespace Tools.ExcelResolver.Editor
             {
                 Attributes = MemberAttributes.Public,
                 Name = varName,
-                Type = new CodeTypeReference(type.RealType),
+                Type = new CodeTypeReference(type.FieldWriteFormat),
                 Comments =
                 {
                     new CodeCommentStatement("<summary>", true),
