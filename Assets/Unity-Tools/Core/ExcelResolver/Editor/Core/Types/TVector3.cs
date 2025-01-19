@@ -5,7 +5,7 @@ namespace Tools.ExcelResolver.Editor
 {
     internal class TVector3 : TType
     {
-        internal override string TypeName => "UnityEngine.Vector3";
+        internal override string TypeName => "vector3";
 
         internal override Type RealType => typeof(Vector3);
 

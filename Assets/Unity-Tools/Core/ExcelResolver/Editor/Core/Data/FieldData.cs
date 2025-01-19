@@ -15,31 +15,33 @@ namespace Tools.ExcelResolver.Editor
         public string description;
         public string path;
         
-        public void Dispose()
+        internal CodeMemberField GetCodeField()
+        {
+            CodeMemberField codeField = new CodeMemberField
+            {
+                Attributes = MemberAttributes.Public,
+                Name = varName,
+                Type = new CodeTypeReference(type.RealType),
+                Comments =
+                {
+                    new CodeCommentStatement("<summary>", true),
+                    new CodeCommentStatement(info, true),
+                },
+            };
+            if (!string.IsNullOrEmpty(description)) 
+                codeField.Comments.Add(new CodeCommentStatement($"<c>{description}</c>", true));
+            codeField.Comments.Add(new CodeCommentStatement("</summary>", true));
+            
+            return codeField;
+        }
+        
+        internal void Dispose()
         {
             varName = null;
             type = null;
             info = null;
             description = null;
             path = null;
-        }
-    }
-
-    internal static class FieldDataExtension
-    {
-        internal static CodeMemberField GetCodeField(this FieldData field)
-        {
-            CodeMemberField codeField = new CodeMemberField
-            {
-                Attributes = MemberAttributes.Public,
-                Name = field.varName,
-                Type = new CodeTypeReference(field.type.RealType),
-                CustomAttributes = new CodeAttributeDeclarationCollection()
-                {
-                    new CodeAttributeDeclaration("SerializeField")
-                },
-            };
-            return codeField;
         }
     }
 }

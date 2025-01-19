@@ -62,21 +62,7 @@ namespace Tools.ExcelResolver.Editor
 
             foreach (var field in classCodeData.fields.Values)
             {
-                CodeMemberField codeField = new CodeMemberField
-                {
-                    Attributes = MemberAttributes.Public,
-                    Name = field.varName,
-                    Type = new CodeTypeReference(field.type.RealType),
-                    Comments =
-                    {
-                        new CodeCommentStatement("<summary>", true),
-                        new CodeCommentStatement(field.info, true),
-                    },
-                };
-                if (!string.IsNullOrEmpty(field.description)) 
-                    codeField.Comments.Add(new CodeCommentStatement($"<c>{field.description}</c>", true));
-                codeField.Comments.Add(new CodeCommentStatement("</summary>", true));
-                classType.Members.Add(codeField);
+                classType.Members.Add(field.GetCodeField());
             }
             
             #endregion

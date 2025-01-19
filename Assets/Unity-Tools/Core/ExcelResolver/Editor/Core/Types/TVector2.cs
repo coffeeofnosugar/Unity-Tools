@@ -5,7 +5,7 @@ namespace Tools.ExcelResolver.Editor
 {
     internal class TVector2 : TType
     {
-        internal override string TypeName => "Vector2";
+        internal override string TypeName => "vector2";
 
         internal override Type RealType => typeof(Vector2);
 
