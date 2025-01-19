@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
@@ -139,8 +140,7 @@ namespace Tools.ExcelResolver.Editor
             {
                 if (fieldDatas.Values.Count(f => f.varName == fieldData.varName) > 1)
                 {
-                    Debug.LogError($"'{classCodeData.className}'拥有相同的字段: {fieldData.varName}");
-                    return null;
+                    throw new Exception($"'{classCodeData.className}'拥有相同的字段: {fieldData.varName}");
                 }
             }
 

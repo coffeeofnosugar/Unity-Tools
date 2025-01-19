@@ -8,10 +8,9 @@ namespace Tools.ExcelResolver.Editor
 
         internal override Type RealType => typeof(string);
 
-        internal override bool TryParseFrom(string s, out object o)
+        internal override object TryParseFrom(string s)
         {
-            o = s;
-            return true;
+            return s;
         }
     }
 }

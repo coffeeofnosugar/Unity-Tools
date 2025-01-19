@@ -8,11 +8,9 @@ namespace Tools.ExcelResolver.Editor
 
         internal override Type RealType => typeof(int);
 
-        internal override bool TryParseFrom(string s, out object o)
+        internal override object TryParseFrom(string s)
         {
-            var b = int.TryParse(s, out var i);
-            o = i;
-            return b;
+            return int.TryParse(s, out var result) ? result : null;
         }
     }
 }

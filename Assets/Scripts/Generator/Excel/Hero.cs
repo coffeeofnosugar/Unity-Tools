@@ -48,5 +48,15 @@ namespace Tools.ExcelResolver
         /// 移速
         /// </summary>
         public float speed;
+        
+        /// <summary>
+        /// 位置
+        /// </summary>
+        public UnityEngine.Vector3 pos;
+        
+        /// <summary>
+        /// 位置
+        /// </summary>
+        public UnityEngine.Vector2 ches;
     }
 }

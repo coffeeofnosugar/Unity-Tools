@@ -8,6 +8,6 @@ namespace Tools.ExcelResolver.Editor
         
         internal abstract Type RealType { get; }
 
-        internal abstract bool TryParseFrom(string s, out object o);
+        internal abstract object TryParseFrom(string s);
     }
 }

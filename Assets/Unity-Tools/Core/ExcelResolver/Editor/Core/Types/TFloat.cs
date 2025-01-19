@@ -8,15 +8,13 @@ namespace Tools.ExcelResolver.Editor
 
         internal override Type RealType => typeof(float);
 
-        internal override bool TryParseFrom(string s, out object o)
+        internal override object TryParseFrom(string s)
         {
-            if (float.TryParse(s, out float f))
+            if (float.TryParse(s, out float result))
             {
-                o = f;
-                return true;
+                return result;
             }
-            o = null;
-            return false;
+            return null;
         }
     }
 }

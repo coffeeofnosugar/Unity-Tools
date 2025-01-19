@@ -14,15 +14,17 @@ namespace Tools.ExcelResolver.Editor
         /// <returns></returns>
         internal static TType GetTTypeByString(string typeText)
         {
+            typeText = typeText.ToLower();
+            
             return typeText switch
             {
                 "int" => new TInt(),
                 "float" => new TFloat(),
                 "string" => new TString(),
                 "bool" => new TBool(),
-                // "Vector2" => typeof(Vector2),
-                // "Vector3" => typeof(Vector3),
-                //
+                "vector2" => new TVector2(),
+                "vector3" => new TVector3(),
+                
                 // "List<int>" => typeof(List<int>),
                 // "List<float>" => typeof(List<float>),
                 // "List<string>" => typeof(List<string>),

@@ -37,15 +37,25 @@ namespace Tools.ExcelResolver.Editor
             return values;
         }
 
+        /// <summary>
+        /// 将TType转换为C#对象
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="type"></param>
+        /// <param name="className"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         internal static object ConvertCellValue<T>(ExcelRange cell, T type, string className)
             where T : TType
         {
-            if (type.TryParseFrom(cell.Text, out var value))
+            var result = type.TryParseFrom(cell.Text);
+            if (result != null)
             {
-                return value;
+                return result;
             }
             
-            throw new Exception($"单元格转换失败  FullAddress:'{cell.FullAddress}'    Text:'{cell.Text}'  className:'{className}'");
+            throw new Exception($"单元格转换失败   FullAddress: {cell.FullAddress}   Text: {cell.Text}   className: {className}");
         }
         
         /// <summary>
