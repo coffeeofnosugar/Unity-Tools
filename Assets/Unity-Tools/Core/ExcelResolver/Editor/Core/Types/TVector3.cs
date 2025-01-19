@@ -7,17 +7,22 @@ namespace Tools.ExcelResolver.Editor
     {
         internal override string TypeName => "vector3";
 
+        internal override bool String2TType(string typeText)
+        {
+            return string.Equals(typeText, TypeName, StringComparison.OrdinalIgnoreCase);
+        }
+
         internal override Type RealType => typeof(Vector3);
 
-        internal override object TryParseFrom(string s)
+        internal override object TryParseFrom(string cellText)
         {
-            if (!s.StartsWith("(") || !s.EndsWith(")"))
+            if (!cellText.StartsWith("(") || !cellText.EndsWith(")"))
             {
                 return null;
             }
             
-            s = s[1..^1];
-            var ss = s.Split(',');
+            cellText = cellText[1..^1];
+            var ss = cellText.Split(',');
             if (ss.Length != 3)
             {
                 return null;

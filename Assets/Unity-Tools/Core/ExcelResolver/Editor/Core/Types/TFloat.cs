@@ -6,11 +6,16 @@ namespace Tools.ExcelResolver.Editor
     {
         internal override string TypeName => "float";
 
+        internal override bool String2TType(string typeText)
+        {
+            return string.Equals(typeText, TypeName, StringComparison.OrdinalIgnoreCase);
+        }
+
         internal override Type RealType => typeof(float);
 
-        internal override object TryParseFrom(string s)
+        internal override object TryParseFrom(string cellText)
         {
-            if (float.TryParse(s, out float result))
+            if (float.TryParse(cellText, out float result))
             {
                 return result;
             }

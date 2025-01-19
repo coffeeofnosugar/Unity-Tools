@@ -7,12 +7,17 @@ namespace Tools.ExcelResolver.Editor
     {
         internal override string TypeName => "vector2";
 
+        internal override bool String2TType(string typeText)
+        {
+            return string.Equals(typeText, TypeName, StringComparison.OrdinalIgnoreCase);
+        }
+
         internal override Type RealType => typeof(Vector2);
 
-        internal override object TryParseFrom(string s)
+        internal override object TryParseFrom(string cellText)
         {
-            s = s[1..^1];
-            var ss = s.Split(',');
+            cellText = cellText[1..^1];
+            var ss = cellText.Split(',');
             if (ss.Length != 2)
             {
                 return null;

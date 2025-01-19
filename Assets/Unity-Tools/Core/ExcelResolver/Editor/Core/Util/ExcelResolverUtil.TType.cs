@@ -1,12 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using System.Reflection;
 
 namespace Tools.ExcelResolver.Editor
 {
     internal static partial class ExcelResolverUtil
     {
+        private static TType[] _allTTypes;
+        
+        internal static TType[] GetAllTTypes()
+        {
+            return Assembly.GetAssembly(typeof(TType))
+                .GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(TType)) && !t.IsAbstract)
+                .Select(t => Activator.CreateInstance(t) as TType)
+                .ToArray();
+        }
+        
         /// <summary>
         /// 更具类型字符串获取 TType
         /// </summary>
@@ -14,7 +24,19 @@ namespace Tools.ExcelResolver.Editor
         /// <returns></returns>
         internal static TType GetTTypeByString(string typeText)
         {
+            
             typeText = typeText.ToLower();
+            _allTTypes ??= GetAllTTypes();
+            
+            foreach (var tType in _allTTypes)
+            {
+                if (tType.String2TType(typeText))
+                {
+                    return tType;
+                }
+            }
+
+            throw new Exception($"未找到类型 {typeText}");
             
             return typeText switch
             {
