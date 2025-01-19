@@ -8,8 +8,8 @@ namespace Tools.ExcelResolver.Editor
         public string className;
         public Dictionary<int, FieldData> fields = new();
         // public FieldData[] fields;
-        public int[] keyIndex;
-        // public FieldData[] keyField;
+        // public int[] keyIndex;
+        public FieldData[] keyField;
 
         public ClassCodeData(string className)
         {

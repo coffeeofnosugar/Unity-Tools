@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.CSharp;
 
 namespace Tools.ExcelResolver.Editor
@@ -61,7 +62,7 @@ namespace Tools.ExcelResolver.Editor
             switch (classCodeData.tableType)
             {
                 case TableType.SingleKeyTable:
-                    FieldData keyField = classCodeData.fields[classCodeData.keyIndex[0]];
+                    FieldData keyField = classCodeData.fields.First().Value;
                     CodeMemberField codeField = new CodeMemberField($"Dictionary<{keyField.typeString}, {classCodeData.className}>", "Data")
                     {
                         Attributes = MemberAttributes.Public,

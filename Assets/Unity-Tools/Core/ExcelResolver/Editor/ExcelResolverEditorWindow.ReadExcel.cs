@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OfficeOpenXml;
@@ -32,11 +31,8 @@ namespace Tools.ExcelResolver.Editor
                 
                 var classCodeData = new ClassCodeData(excelFile.Name[..^5]);
                 
-                var fieldDatas = GetFieldData(worksheet);
-                classCodeData.fields = fieldDatas;
-                var tableType = CheckTableType(worksheet, classCodeData.className, out var keyIndex);
-                classCodeData.tableType = tableType;
-                classCodeData.keyIndex = keyIndex;
+                classCodeData.fields = GetFieldData(worksheet, classCodeData);
+                classCodeData.tableType = CheckTableType(worksheet, classCodeData);
 
                 
                 WriteDataCode(classCodeData);
@@ -47,87 +43,45 @@ namespace Tools.ExcelResolver.Editor
             AssetDatabase.Refresh();
         }
         
-        private TableType CheckTableType(ExcelWorksheet worksheet, string className, out int[] keyIndex)
+        private TableType CheckTableType(ExcelWorksheet worksheet, ClassCodeData classCodeData)
         {
-            var startColumn = worksheet.Dimension.Start.Column; // 起始列
-            var endColumn = worksheet.Dimension.End.Column; // 结束列
+            var tableType = TableType.SingleKeyTable;
 
             string config = worksheet.Cells[1, 1].Text;
             
-            var type = TableType.SingleKeyTable;
-            keyIndex = null;
-            
             if (config.Contains("SingleKeyTable"))
             {
-                type = TableType.SingleKeyTable;
+                tableType = TableType.SingleKeyTable;
                 var configs = config.Split("|");
-                Assert.IsTrue(configs.Length >= 2, $"'{className}'配置错误");
+                Assert.IsTrue(configs.Length >= 2, $"'{classCodeData.className}'配置错误，SingleKeyTable只能有一个主键");
                 var key = configs[1];
-                var index = getKeyIndex(key);
-                Assert.IsTrue(index != -1, $"'{className}'配置错误");
-                keyIndex = new[] { index };
+                classCodeData.keyField = classCodeData.fields.Where(f => f.Value.varName == key).Select(p => p.Value).ToArray();
             }
-            // else if (config.Contains("UnionMultiKeyTable"))
-            // {
-            //     type = TableType.UnionMultiKeyTable;
-            //     var configs = config.Split("|");
-            //     Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
-            //     var keys = configs[1].Split(",");
-            //     keyIndex = new int[keys.Length];
-            //     for (int i = 0; i < keys.Length; i++)
-            //     {
-            //         var index = getKeyIndex(keys[i]);
-            //         Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
-            //         keyIndex[i] = index;
-            //     }
-            // }
-            // else if (config.Contains("MultiKeyTable"))
-            // {
-            //     type = TableType.MultiKeyTable;
-            //     var configs = config.Split("|");
-            //     Assert.IsTrue(configs.Length >= 2, "UnionMultiKeyTable配置错误");
-            //     var keys = configs[1].Split(",");
-            //     keyIndex = new int[keys.Length];
-            //     for (int i = 0; i < keys.Length; i++)
-            //     {
-            //         var index = getKeyIndex(keys[i]);
-            //         Assert.IsTrue(index != -1, "UnionMultiKeyTable配置错误");
-            //         keyIndex[i] = index;
-            //     }
-            // }
-            // else if (config.Contains("NotKetTable"))
-            // {
-            //     type = TableType.NotKetTable;
-            // }
-            // else if (config.Contains("ColumnTable"))
-            // {
-            //     type = TableType.ColumnTable;
-            // }
-            // else
-            // {
-            //     Debug.LogError("配置错误");
-            // }
-
-            return type;
-
-            int getKeyIndex(string key)
+            else if (config.Contains("UnionMultiKeyTable"))
             {
-                int keyIndex = -1;
-                for (int col = startColumn; col <= endColumn; col++)
-                {
-                    var cellValue = worksheet.Cells[2, col].Text; // 获取第二行第 col 列的文本值
-                    if (string.Equals(cellValue, key, StringComparison.OrdinalIgnoreCase)) // 忽略大小写比较
-                    {
-                        keyIndex = col;
-                        break;
-                    }
-                }
-
-                return keyIndex;
+                tableType = TableType.UnionMultiKeyTable;
             }
+            else if (config.Contains("MultiKeyTable"))
+            {
+                tableType = TableType.MultiKeyTable;
+            }
+            else if (config.Contains("NotKetTable"))
+            {
+                tableType = TableType.NotKetTable;
+            }
+            else if (config.Contains("ColumnTable"))
+            {
+                tableType = TableType.ColumnTable;
+            }
+            else
+            {
+                Debug.LogError("配置错误");
+            }
+            
+            return tableType;
         }
 
-        private Dictionary<int, FieldData> GetFieldData(ExcelWorksheet worksheet)
+        private Dictionary<int, FieldData> GetFieldData(ExcelWorksheet worksheet, ClassCodeData classCodeData)
         {
             var fieldDatas = new Dictionary<int, FieldData>();
             
@@ -147,6 +101,16 @@ namespace Tools.ExcelResolver.Editor
                     path = worksheet.Cells[6, col].Text,
                 };
                 fieldDatas.Add(col, fieldData);
+            }
+            
+            // 判断是否有重复的varName
+            foreach (var fieldData in fieldDatas.Values)
+            {
+                if (fieldDatas.Values.Count(f => f.varName == fieldData.varName) > 1)
+                {
+                    Debug.LogError($"'{classCodeData.className}'拥有相同的字段: {fieldData.varName}");
+                    return null;
+                }
             }
 
             return fieldDatas;
